@@ -1,0 +1,5 @@
+# VSCode stuff
+.vscode/
+
+# Dotenv variables
+.env
