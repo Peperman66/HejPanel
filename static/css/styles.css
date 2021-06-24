@@ -19,6 +19,7 @@ img {
         "header weather events"
         "media media events"
         "lunch lunch events";
+    gap: 30px;
     padding: 10px;
 }
 
