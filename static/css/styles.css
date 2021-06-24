@@ -7,9 +7,6 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
-img {
-}
-
 #grid-container {
     display: grid;
     aspect-ratio: 16/10;
@@ -30,13 +27,6 @@ img {
     height: 100%;
     aspect-ratio: 1/1;
     border: solid 10px var(--white);
-}
-
-#logo-background img {
-    display: block;
-    max-width: 100%;
-    max-height: 100%;
-    margin: auto;    
 }
 
 #header {
@@ -107,6 +97,27 @@ img {
         "temperature temperature temperature-low"
         "sunrise sunset sunset";
     */
+}
+
+#lunch {
+    grid-area: lunch;
+    min-height: 100%;
+}
+
+#lunch-icon-background {
+    height: 100%;
+    aspect-ratio: 1/1;
+    border: solid 10px var(--white);
+    padding: 1% 0 1%;
+    margin-top: -10px;
+    margin-left: -10px;
+}
+
+.logo {
+    display: block;
+    max-width: 100%;
+    max-height: 100%;
+    margin: auto;    
 }
 
 .round {
