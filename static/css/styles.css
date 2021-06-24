@@ -82,6 +82,16 @@ img {
     margin-right: 2.5%;
 }
 
+#weather {
+    grid-area: weather;
+    min-height: 100%;
+}
+
+#weather-background {
+    height: 100%;
+    width: 100%;
+}
+
 .round {
     border-radius: 200px;
 }
