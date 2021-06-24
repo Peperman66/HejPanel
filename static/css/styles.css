@@ -127,8 +127,28 @@ body {
 }
 
 .lunch-meal {
+    display: flex;
+    align-items: center;
     z-index: -1;
     height: 20%;
+}
+
+.lunch-type {
+    font-weight: 700;
+    font-size: 30pt;
+    color: var(--white);
+    margin-left: 15%;
+}
+
+.lunch-description {
+    font-size: 17pt;
+    color: var(--white);
+    margin-left: 19%;
+    position: absolute;
+    width: 80%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .logo {
