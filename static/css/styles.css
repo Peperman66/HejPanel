@@ -105,12 +105,30 @@ body {
 }
 
 #lunch-icon-background {
-    height: 100%;
+    height: calc(100% + 2 * 10px);
     aspect-ratio: 1/1;
     border: solid 10px var(--white);
     padding: 1% 0 1%;
     margin-top: -10px;
     margin-left: -10px;
+}
+
+#lunch-meal-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    top: -100%;
+    margin-top: -10px;
+    height: 100%;
+    width: 95%;
+    float: right;
+    z-index: -1;
+}
+
+.lunch-meal {
+    z-index: -1;
+    height: 20%;
 }
 
 .logo {
