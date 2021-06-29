@@ -175,6 +175,19 @@ body {
     text-indent: 5%;
 }
 
+#media {
+    grid-area: media;
+    min-height: 100%;
+}
+
+#media-container {
+    height: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    aspect-ratio: 16/9;
+    background-color: var(--lightblue); /*placeholder*/
+}
+
 #lunch {
     grid-area: lunch;
     min-height: 100%;
