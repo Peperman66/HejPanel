@@ -99,6 +99,78 @@ body {
     */
 }
 
+#events {
+    grid-area: events;
+    min-height: 100%;
+}
+
+#events-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+}
+
+.event {
+    width: 100%;
+    height: 18%;
+}
+
+.event-icon-char-background {
+    height: 75%;
+    aspect-ratio: 1/1;
+    border: solid 8px var(--white);
+    margin-top: -8px;
+    margin-left: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.event-title-background {
+    position: relative;
+    margin-top: 8px;
+    top: -75%;
+    width: 90%;
+    height: 40%;
+    float: right;
+    border: 2px solid var(--white);
+    z-index: -1;
+    display: flex;
+    align-items: center;
+}
+
+.event-description-background {
+    position: relative;
+    top: -75%;
+    right: 5%;
+    width: 82%;
+    height: 60%;
+    float: right;
+    border: 2px solid var(--white);
+    z-index: -1;
+}
+
+.event-icon-char {
+    font-size: 90pt;
+    font-weight: 700;
+}
+
+.event-title {
+    padding-left: 22%;
+    font-size: 40pt;
+    font-weight: 500;
+}
+
+.event-description {
+    width: 100%;
+    height: 100%;
+    padding: 0 15%;
+    font-size: 15pt;
+    text-indent: 5%;
+}
+
 #lunch {
     overflow: hidden;
     grid-area: lunch;
