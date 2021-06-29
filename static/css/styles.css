@@ -18,6 +18,7 @@ body {
         "lunch lunch events";
     gap: 30px;
     padding: 10px;
+    overflow: hidden;
 }
 
 #logo-background {
@@ -170,7 +171,6 @@ body {
 }
 
 #lunch {
-    overflow: hidden;
     grid-area: lunch;
     min-height: 100%;
 }
