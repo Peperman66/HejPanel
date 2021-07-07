@@ -64,6 +64,7 @@ body {
 #header-time {
     padding-left: 25%;
     font-size: 80pt;
+    overflow: hidden;
 }
 
 #header-countdown {
