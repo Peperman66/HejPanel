@@ -77,6 +77,8 @@ body {
     aspect-ratio: 1/1;
     background-color: white;
     margin-right: 2.5%;
+    padding: 1% 0;
+    overflow: hidden;
 }
 
 #weather {
