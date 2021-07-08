@@ -90,15 +90,33 @@ body {
     height: 100%;
     width: 100%;
     padding: 2% 17%;
-    /*
     display: grid;
     grid-template-columns: 6fr 2fr 5fr;
     grid-template-rows: 2fr 2fr 3fr;
     grid-template-areas: 
         "temperature temperature temperature-high"
         "temperature temperature temperature-low"
-        "sunrise sunset sunset";
-    */
+        "first-time second-time second-time";
+}
+
+#weather-temperature {
+    grid-area: temperature;
+}
+
+#weather-highs {
+    grid-area: temperature-high;
+}
+
+#weather-lows {
+    grid-area: temperature-low;
+}
+
+#weather-first-time {
+    grid-area: first-time;
+}
+
+#weather-second-time {
+    grid-area: second-time;
 }
 
 #events {
