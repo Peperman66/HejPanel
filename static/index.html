@@ -21,8 +21,7 @@
                     <span id="header-countdown">11. 06. 2021 – za &lt; 1 min zvoní</span>
                 </div>
                 <script>
-                    function displayDateAndCountdown() {
-                        let today = new Date();
+                    function getDateAndCountdown(today) {
                         let d = addZero(today.getDate());
                         let m = addZero(today.getMonth() + 1);
                         let y = today.getFullYear();
@@ -30,7 +29,6 @@
 
                         let countdown = getCountdown(today.getHours(), today.getMinutes(), today.getSeconds())
 
-                        document.getElementById('header-countdown').innerHTML = `${date} - ${countdown}`;
                         return `${date} - ${countdown}`;
                     }
 
@@ -91,16 +89,22 @@
                         return day2 - day1;
                     }
                     
-                    function displayTime() {
-                        var today = new Date();
+                    function getTime(today) {
                         var h = addZero(today.getHours());
                         var m = addZero(today.getMinutes());
                         var s = addZero(today.getSeconds());
-                        document.getElementById('header-time').innerHTML = h + ":" + m + ":" + s;
+                        return `${h}:${m}:${s}`;
                     }
 
-                    setInterval(displayTime, 1000);
-                    setInterval(displayDateAndCountdown, 1000);
+                    function displayTimeAndDateCountdown() {
+                        let today = new Date();
+                        let time = getTime(today);
+                        let dateAndCountdown = getDateAndCountdown(today);
+                        document.getElementById('header-time').innerHTML = time;
+                        document.getElementById('header-countdown').innerHTML = dateAndCountdown;
+                    }
+
+                    setInterval(displayTimeAndDateCountdown, 1000);
                 </script>
             </div>
             <div id="weather">
