@@ -5,7 +5,9 @@ import {
     isWebSocketPongEvent,
 } from 'https://deno.land/std@0.99.0/ws/mod.ts';
 import { v4 } from 'https://deno.land/std@0.99.0/uuid/mod.ts';
+
 import {GetLunchData} from '../handlers/lunch.ts';
+import {GetWeatherData} from '../handlers/weather.ts';
 
 const sockets = new Map<string, WebSocket>();
 
@@ -21,6 +23,7 @@ async function handleWs(sock: WebSocket) {
     sockets.set(socketId, sock);
 
     sendLunchData(sock);
+    sendWeatherData(sock);
 
     try {
         for await (const ev of sock) {
@@ -44,13 +47,21 @@ async function handleWs(sock: WebSocket) {
     }
 }
 
-function sendLunchData(sock: WebSocket): void {
+function sendLunchData(sock: WebSocket) {
     sock.send(JSON.stringify({
         type: 'lunch',
         data: GetLunchData()
     }));
 }
 
+function sendWeatherData(sock: WebSocket) {
+    sock.send(JSON.stringify({
+        type: 'weather',
+        data: GetWeatherData()
+    }))
+}
+
 setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000) //every 6 hours
+setInterval(() => {sockets.forEach(sock => sendWeatherData(sock))}, 30*60*1000) //every 30 minutes
 
 export default apiRouter;
