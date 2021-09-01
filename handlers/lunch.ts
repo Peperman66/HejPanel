@@ -21,13 +21,21 @@ function Parse(): Promise<Lunch> {
         .then(text => {
             const doc = new DOMParser().parseFromString(text, "text/html");
             const currentDay = doc?.getElementsByClassName("jidla")[0];
-            return {
-                Soup: currentDay?.getElementsByClassName("nazev")[0]?.innerText || null,
+            const output: Lunch = {
                 LunchOne: currentDay?.getElementsByClassName("nazev")[2]?.innerText || null,
                 LunchTwo: currentDay?.getElementsByClassName("nazev")[3]?.innerText || null,
                 LunchThree: null,
-                Snack: currentDay?.getElementsByClassName("nazev")[8]?.innerText || null
+                Soup: currentDay?.getElementsByClassName("nazev")[0]?.innerText || null,
+                Snack: null
+            };
+            if (currentDay?.getElementsByClassName("nazev").length == 10) {
+                output.LunchThree = currentDay.getElementsByClassName("nazev")[4]?.innerText || null;
+                output.Snack = currentDay?.getElementsByClassName("nazev")[9].innerText || null;
+            } else {
+                output.LunchThree = null;
+                output.Snack = currentDay?.getElementsByClassName("nazev")[8].innerText || null;
             }
+            return output;
         });
 }
 
