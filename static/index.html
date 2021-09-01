@@ -282,7 +282,11 @@
                 "LunchTwo": "lunch-two",
                 "LunchThree": "lunch-three"
             }
+            let weatherImageBaseUrl = "http://openweathermap.org/img/wn/"
             let websocket = new WebSocket(`ws://${window.location.hostname}/api/ws`);
+            function getHoursAndMins(date) {
+                return `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
+            }
             websocket.addEventListener('message', event => {
                 let data = JSON.parse(event.data);
                 if (data.type === "lunch") {
@@ -292,6 +296,18 @@
                         document.getElementById(divId).getElementsByClassName('lunch-description')[0].innerHTML = lunchData[lunchName];
                         document.getElementById(divId).style = lunchData[lunchName] ? "" : "display: none;";
                     }
+                } else if (data.type === "weather") {
+                    let weatherData = data.data;
+                    document.getElementById("weather-temperature-image").src = weatherImageBaseUrl + weatherData.CurrentTemperatureIcon + "@2x.png";
+                    document.getElementById("weather-temperature-text").innerText = `${weatherData.CurrentTemperature} °C`;
+                    document.getElementById("weather-highs-text").innerText = `${weatherData.MaxTemperature} °C`;
+                    document.getElementById("weather-lows-text").innerText = `${weatherData.MinTemperature} °C`;
+                    document.getElementById("weather-first-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon1 + "@2x.png";
+                    let time1 = new Date(weatherData.NextTemperatureTime1 * 1000);
+                    document.getElementById("weather-first-time-text").innerText = getHoursAndMins(time1);
+                    document.getElementById("weather-second-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon2 + "@2x.png";
+                    let time2 = new Date(weatherData.NextTemperatureTime2 * 1000);
+                    document.getElementById("weather-second-time-text").innerText = getHoursAndMins(time2);
                 }
             });
         </script>
