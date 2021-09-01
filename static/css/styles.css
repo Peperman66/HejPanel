@@ -89,9 +89,9 @@ body {
 #weather-background {
     height: 100%;
     width: 100%;
-    padding: 2% 17%;
+    padding: 2% 10%;
     display: grid;
-    grid-template-columns: 6fr 2fr 5fr;
+    grid-template-columns: 6fr 2fr 4fr;
     grid-template-rows: 2fr 2fr 3fr;
     grid-template-areas: 
         "temperature temperature temperature-high"
@@ -99,8 +99,27 @@ body {
         "first-time second-time second-time";
 }
 
+#weather-background div {
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+}
+
 #weather-temperature {
     grid-area: temperature;
+}
+
+#weather-temperature-image {
+    height: 100%;
+    position: relative;
+    left: -5%;
+}
+
+#weather-temperature-text {
+    position: relative;
+    left: -10%;
+    font-size: 45pt;
+    white-space: nowrap;
 }
 
 #weather-highs {
@@ -111,12 +130,25 @@ body {
     grid-area: temperature-low;
 }
 
+#weather-highs-text, #weather-lows-text {
+    padding-left: 8%;
+    font-size: 20pt;
+}
+
 #weather-first-time {
     grid-area: first-time;
 }
 
 #weather-second-time {
     grid-area: second-time;
+}
+
+#weather-first-time img, #weather-second-time img {
+    height: 100%;
+}
+
+#weather-first-time-text, #weather-second-time-text {
+    font-size: 20pt;
 }
 
 #events {
