@@ -308,6 +308,19 @@
                     document.getElementById("weather-second-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon2 + "@2x.png";
                     let time2 = new Date(weatherData.NextTemperatureTime2 * 1000);
                     document.getElementById("weather-second-time-text").innerText = getHoursAndMins(time2);
+                } else if (data.type === "events") {
+                    let eventsData = data.data;
+                    let eventsContainer = document.getElementById("events-container");
+                    for (let i = 0; i < eventsContainer.getElementsByClassName("event").length; i++) {
+                        if (i >= eventsData.length || eventsData[i].Name === "") {
+                            eventsContainer.getElementsByClassName("event")[i].style = "display: none";
+                        } else {
+                            eventsContainer.getElementsByClassName("event")[i].style = "";
+                            eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
+                            eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
+                            eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = eventsData[i].IsImportant === true ? "!" : "i";
+                        }
+                    }
                 }
             });
         </script>
