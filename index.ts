@@ -4,9 +4,23 @@ import apiRouter from './routers/api.ts';
 
 const app = new Application();
 const port: number = parseInt(config({ safe: true }).PORT);
+const login: string = config({safe: true}).LOGIN;
 
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
+
+app.use(async (ctx, next) => {
+    if (ctx.request.method === 'GET') {
+        if (ctx.request.url.pathname === '/edit.html') {
+            if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+                ctx.response.status = 401;
+                ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+                return;
+            }         
+        }
+    }
+    await next();
+});
 
 app.use(async (ctx) => {
     await ctx.send({
