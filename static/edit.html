@@ -63,5 +63,21 @@
                 return false;
             }
         </script>
+        <script>
+            let eventForm = document.getElementById("event-form")
+            let websocket = new WebSocket(`ws://${window.location.hostname}/api/ws`);
+            websocket.addEventListener('message', event => {
+                let data = JSON.parse(event.data);
+                if (data.type === "events") {
+                    let eventData = data.data;
+                    for (let i = 0; i < eventData.length; i++){
+                        eventForm.elements["event-header"][i].value = eventData[i].Name;
+                        eventForm.elements["event-content"][i].value = eventData[i].Description;
+                        eventForm.elements["event-important"][i].checked = eventData[i].IsImportant;
+                    }
+                } else if (data.type === "weather") {
+                }
+            });
+        </script>
     </body>
 </html>
