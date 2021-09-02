@@ -5,10 +5,13 @@ import {
     isWebSocketPongEvent,
 } from 'https://deno.land/std@0.99.0/ws/mod.ts';
 import { v4 } from 'https://deno.land/std@0.99.0/uuid/mod.ts';
+import { config } from 'https://deno.land/x/dotenv@v2.0.0/mod.ts';
 
 import {GetLunchData} from '../handlers/lunch.ts';
 import {GetWeatherData} from '../handlers/weather.ts';
+import {GetEventData, SaveEventData} from '../handlers/events.ts';
 
+const login: string = config({safe: true}).LOGIN;
 const sockets = new Map<string, WebSocket>();
 
 const apiRouter = new Router();
@@ -16,6 +19,23 @@ apiRouter
     .get('/api/ws', async (ctx) => {
         const sock = await ctx.upgrade();
         handleWs(sock);
+    })
+    .post('/api/events', async (ctx) => {
+        if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+            ctx.response.status = 401;
+            ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+        } else {
+            await ctx.request.body({type: "json"}).value
+                .then(result => SaveEventData(result))
+                .then(() => {
+                    ctx.response.status = 204;
+                    sockets.forEach(sock => sendEventData(sock));
+                })
+                .catch((err) => {
+                    ctx.response.status = 500;
+                    console.log(err);
+                });
+        }
     });
 
 async function handleWs(sock: WebSocket) {
@@ -24,6 +44,7 @@ async function handleWs(sock: WebSocket) {
 
     sendLunchData(sock);
     sendWeatherData(sock);
+    sendEventData(sock);
 
     try {
         for await (const ev of sock) {
@@ -58,6 +79,13 @@ function sendWeatherData(sock: WebSocket) {
     sock.send(JSON.stringify({
         type: 'weather',
         data: GetWeatherData()
+    }))
+}
+
+async function sendEventData(sock: WebSocket) {
+    sock.send(JSON.stringify({
+        type: 'events',
+        data: await GetEventData()
     }))
 }
 
