@@ -3,3 +3,6 @@
 
 # Dotenv variables
 .env
+
+# Database files
+db/
