@@ -30,10 +30,10 @@ function Parse(): Promise<Lunch> {
             };
             if (currentDay?.getElementsByClassName("nazev").length == 10) {
                 output.LunchThree = currentDay.getElementsByClassName("nazev")[4]?.innerText || null;
-                output.Snack = currentDay?.getElementsByClassName("nazev")[9].innerText || null;
+                output.Snack = currentDay?.getElementsByClassName("nazev")[9]?.innerText || null;
             } else {
                 output.LunchThree = null;
-                output.Snack = currentDay?.getElementsByClassName("nazev")[8].innerText || null;
+                output.Snack = currentDay?.getElementsByClassName("nazev")[8]?.innerText || null;
             }
             return output;
         });
