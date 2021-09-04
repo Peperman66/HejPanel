@@ -298,6 +298,11 @@ body {
     margin: auto;    
 }
 
+.media-image-display {
+    aspect-ratio: 16/9;
+    width: 20%;
+}
+
 .round {
     border-radius: 200px;
 }
