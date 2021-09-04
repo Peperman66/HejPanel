@@ -43,6 +43,28 @@
             </div>
             <input type="submit">
         </form>
+        <h2>Obrázky</h2>
+        <form id="media-form" onsubmit="return sendImages(this)">
+            <div class="media-edit">
+                <h3>Obrázek č. 1</h3>
+                <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                <img src="" class="media-image-display" name="media-image-display"><br>
+                <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+            </div>
+            <div class="media-edit">
+                <h3>Obrázek č. 2</h3>
+                <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                <img src="" class="media-image-display" name="media-image-display"><br>
+                <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+            </div>
+            <div class="media-edit">
+                <h3>Obrázek č. 3</h3>
+                <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                <img src="" class="media-image-display" name="media-image-display"><br>
+                <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+            </div>
+            <input type="submit">
+        </form>
         <script>
             function sendEvents(form) {
                 let result = [];
@@ -62,6 +84,38 @@
                 });
                 return false;
             }
+            function sendImages(form) {
+                let result = {}
+                for (let i = 0; i < form.elements["media-image"].length; i++){
+                    result[i] = {
+                        Image: form.getElementsByClassName("media-image-display")[i].src !== window.location.href ? getBase64FromImage(form.getElementsByClassName("media-image-display")[i]) : "",
+                        Description: form.elements["media-image-description"].value
+                    }
+                }
+                fetch("/api/media", {
+                    method: 'POST',
+                    body: JSON.stringify(result),
+                    headers: {
+                        'Content-Type': "application/json"
+                    }
+                })
+                return false;
+            }
+            function displayUploadedImage(input) {
+                let targetElement = input.parentNode.getElementsByTagName("img")[0];
+                targetElement.src = URL.createObjectURL(input.files[0]);
+            }
+            function getBase64FromImage(img) {
+                let canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                let context = canvas.getContext("2d");
+                context.drawImage(img, 0, 0);
+                let dataURL = canvas.toDataURL("image/png");
+                let result = dataURL.replace(/^data:image\/(\w+);base64,/, "");
+                canvas.remove();
+                return result;
+            }
         </script>
         <script>
             let eventForm = document.getElementById("event-form")
@@ -75,7 +129,7 @@
                         eventForm.elements["event-content"][i].value = eventData[i].Description;
                         eventForm.elements["event-important"][i].checked = eventData[i].IsImportant;
                     }
-                } else if (data.type === "weather") {
+                } else if (data.type === "media") {
                 }
             });
         </script>
