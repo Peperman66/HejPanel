@@ -10,6 +10,7 @@ import { config } from 'https://deno.land/x/dotenv@v2.0.0/mod.ts';
 import {GetLunchData} from '../handlers/lunch.ts';
 import {GetWeatherData} from '../handlers/weather.ts';
 import {GetEventData, SaveEventData} from '../handlers/events.ts';
+import {GetMediaData, SaveMediaData} from '../handlers/media.ts';
 
 const login: string = config({safe: true}).LOGIN;
 const sockets = new Map<string, WebSocket>();
@@ -36,7 +37,24 @@ apiRouter
                     console.log(err);
                 });
         }
-    });
+    })
+    .post('/api/media', async (ctx) => {
+        if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+            ctx.response.status = 401;
+            ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+        } else {
+            await ctx.request.body({type: "json"}).value
+                .then(result => SaveMediaData(result))
+                .then(() => {
+                    ctx.response.status = 204;
+                    sockets.forEach(sock => sendMediaData(sock));
+                })
+                .catch((err) => {
+                    ctx.response.status = 500;
+                    console.log(err);
+                });
+        }
+    })
 
 async function handleWs(sock: WebSocket) {
     const socketId = v4.generate();
