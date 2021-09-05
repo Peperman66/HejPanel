@@ -85,11 +85,14 @@
                 return false;
             }
             function sendImages(form) {
-                let result = {}
+                let result = [];
                 for (let i = 0; i < form.elements["media-image"].length; i++){
+                    if (form.getElementsByClassName("media-image-display")[i].src === window.location.href) {
+                        continue;
+                    }
                     result[i] = {
-                        Image: form.getElementsByClassName("media-image-display")[i].src !== window.location.href ? getBase64FromImage(form.getElementsByClassName("media-image-display")[i]) : "",
-                        Description: form.elements["media-image-description"].value
+                        Image: getBase64FromImage(form.getElementsByClassName("media-image-display")[i]),
+                        Description: form.elements["media-image-description"][i].value
                     }
                 }
                 fetch("/api/media", {
@@ -107,12 +110,12 @@
             }
             function getBase64FromImage(img) {
                 let canvas = document.createElement("canvas");
-                canvas.width = img.width;
-                canvas.height = img.height;
+                canvas.width = img.naturalWidth;
+                canvas.height = img.naturalHeight;
                 let context = canvas.getContext("2d");
                 context.drawImage(img, 0, 0);
                 let dataURL = canvas.toDataURL("image/png");
-                let result = dataURL.replace(/^data:image\/(\w+);base64,/, "");
+                let result = dataURL.replace(/^data:image\/png;base64,/, "");
                 canvas.remove();
                 return result;
             }
