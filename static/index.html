@@ -321,8 +321,42 @@
                             eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = eventsData[i].IsImportant === true ? "!" : "i";
                         }
                     }
+                } else if (data.type === "media") {
+                    let mediaData = data.data;
+                    let mediaContainer = document.getElementById("media-container")
+                    mediaContainer.innerHTML = "";
+                    for (let i = 0; i < mediaData.length; i++) {
+                        let imgContainer = document.createElement("div");
+                        let img = document.createElement("img");
+                        imgContainer.classList.add("media-image-wrapper");
+                        img.classList.add("media-image");
+                        img.src = `media/${mediaData[i].Image}.png`;
+                        imgContainer.appendChild(img);
+                        mediaContainer.appendChild(imgContainer);
+                        if (mediaData[i].Description !== "") {
+                            let textSpan = document.createElement("span");
+                            textSpan.classList.add("media-image-text");
+                            textSpan.textContent = mediaData[i].Description;
+                            imgContainer.appendChild(textSpan);
+                        }
+                    }
+                    showNextImage(0);
                 }
             });
+            let timeout;
+            function showNextImage(index) {
+                let mediaContainer = document.getElementById("media-container");
+                let previousIndex = (index + mediaContainer.children.length - 1) % mediaContainer.children.length;
+                let nextIndex = (index + 1) % mediaContainer.children.length;
+                mediaContainer.children[previousIndex].classList.remove("media-image-wrapper-visible");
+                mediaContainer.children[index].classList.add("media-image-wrapper-visible");
+                timeout = setTimeout(showNextImage, 30*1000, nextIndex);
+            }
+            function stopSlideshow() {
+                try {
+                    clearTimeout(interval);
+                } catch {}
+            }
         </script>
     </body>
 </html>
