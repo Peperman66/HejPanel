@@ -50,18 +50,21 @@
                 <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
                 <img src="" class="media-image-display" name="media-image-display"><br>
                 <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
             </div>
             <div class="media-edit">
                 <h3>Obrázek č. 2</h3>
                 <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
                 <img src="" class="media-image-display" name="media-image-display"><br>
                 <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
             </div>
             <div class="media-edit">
                 <h3>Obrázek č. 3</h3>
                 <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
                 <img src="" class="media-image-display" name="media-image-display"><br>
                 <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
             </div>
             <input type="submit">
         </form>
@@ -69,11 +72,11 @@
             function sendEvents(form) {
                 let result = [];
                 for (let i = 0; i < form.elements["event-header"].length; i++) {
-                    result[i] = {
+                    result.push({
                         Name: form.elements["event-header"][i].value,
                         Description: form.elements["event-content"][i].value,
                         IsImportant: form.elements["event-important"][i].checked
-                    }
+                    });
                 }
                 fetch("/api/events", {
                     method: 'POST',
@@ -90,10 +93,10 @@
                     if (form.getElementsByClassName("media-image-display")[i].src === window.location.href) {
                         continue;
                     }
-                    result[i] = {
+                    result.push({
                         Image: getBase64FromImage(form.getElementsByClassName("media-image-display")[i]),
                         Description: form.elements["media-image-description"][i].value
-                    }
+                    });
                 }
                 fetch("/api/media", {
                     method: 'POST',
@@ -103,6 +106,9 @@
                     }
                 })
                 return false;
+            }
+            function deleteImage(button) {
+                button.parentNode.getElementsByClassName("media-image-display")[0].src = "";
             }
             function displayUploadedImage(input) {
                 let targetElement = input.parentNode.getElementsByTagName("img")[0];
