@@ -107,6 +107,13 @@ async function sendEventData(sock: WebSocket) {
     }))
 }
 
+async function sendMediaData(sock: WebSocket) {
+    sock.send(JSON.stringify({
+        type: 'media',
+        data: await GetMediaData()
+    }))
+}
+
 setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000) //every 6 hours
 setInterval(() => {sockets.forEach(sock => sendWeatherData(sock))}, 30*60*1000) //every 30 minutes
 
