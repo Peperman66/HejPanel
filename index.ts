@@ -22,6 +22,17 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+app.use(async (ctx, next) => {
+    if (ctx.request.url.pathname.startsWith('/media/')) {
+        await ctx.send({
+            path: `${ctx.request.url.pathname.replace('/media/', '')}`,
+            root: `${Deno.cwd()}/db/images/`
+        });
+    } else {
+        await next();
+    }
+})
+
 app.use(async (ctx) => {
     await ctx.send({
         root: `${Deno.cwd()}/static`,
