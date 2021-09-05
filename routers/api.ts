@@ -63,6 +63,7 @@ async function handleWs(sock: WebSocket) {
     sendLunchData(sock);
     sendWeatherData(sock);
     sendEventData(sock);
+    sendMediaData(sock);
 
     try {
         for await (const ev of sock) {
