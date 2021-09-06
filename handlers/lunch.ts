@@ -14,6 +14,13 @@ export function GetLunchData(): Lunch {
     return currentData;
 }
 
+//Yes, there are really trailing spaces in the source
+const nameTable: Record<string, string> = {
+    "Polévka ": "Soup",
+    "Oběd 1 1": "LunchOne",
+    "Oběd 2 1": "LunchTwo",
+    "Svačina ": "Snack"
+}
 
 function Parse(): Promise<Lunch> {
     return fetch('https://www.strava.cz/strava5/Jidelnicky?zarizeni=1692')
@@ -21,19 +28,18 @@ function Parse(): Promise<Lunch> {
         .then(text => {
             const doc = new DOMParser().parseFromString(text, "text/html");
             const currentDay = doc?.getElementsByClassName("jidla")[0];
-            const output: Lunch = {
-                LunchOne: currentDay?.getElementsByClassName("nazev")[2]?.innerText || null,
-                LunchTwo: currentDay?.getElementsByClassName("nazev")[3]?.innerText || null,
+            const output: Lunch & Record<string, string | null> = {
+                LunchOne: null,
+                LunchTwo: null,
                 LunchThree: null,
-                Soup: currentDay?.getElementsByClassName("nazev")[0]?.innerText || null,
+                Soup: null,
                 Snack: null
             };
-            if (currentDay?.getElementsByClassName("nazev").length == 10) {
-                output.LunchThree = currentDay.getElementsByClassName("nazev")[4]?.innerText || null;
-                output.Snack = currentDay?.getElementsByClassName("nazev")[9]?.innerText || null;
-            } else {
-                output.LunchThree = null;
-                output.Snack = currentDay?.getElementsByClassName("nazev")[8]?.innerText || null;
+            for (let i = 0; i < (currentDay?.getElementsByClassName("popis")?.length || 0); i++) {
+                const currentElement = doc?.getElementsByClassName("popis")[i];
+                if (currentElement?.innerText !== undefined && nameTable[currentElement.innerText] !== null) {
+                    output[nameTable[currentElement.innerText]] = currentElement?.parentElement?.getElementsByClassName("nazev")[0]?.innerText || null;
+                }
             }
             return output;
         });
