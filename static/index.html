@@ -322,6 +322,7 @@
                         }
                     }
                 } else if (data.type === "media") {
+                    stopSlideshow()
                     let mediaData = data.data;
                     let mediaContainer = document.getElementById("media-container")
                     mediaContainer.innerHTML = "";
@@ -340,7 +341,9 @@
                             imgContainer.appendChild(textSpan);
                         }
                     }
-                    showNextImage(0);
+                    if (mediaContainer.children.length > 0) {
+                        showNextImage(0);
+                    }
                 }
             });
             let timeout;
