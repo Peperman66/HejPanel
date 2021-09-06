@@ -22,6 +22,8 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+Deno.mkdir('db').catch(() => {});
+
 app.use(async (ctx, next) => {
     if (ctx.request.url.pathname.startsWith('/media/')) {
         await ctx.send({
