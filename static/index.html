@@ -323,6 +323,7 @@
                                 eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
                                 eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
                                 eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = eventsData[i].IsImportant === true ? "!" : "i";
+                                resizeText(eventsContainer.getElementsByClassName("event-title")[i]);
                             }
                         }
                     } else if (data.type === "media") {
@@ -359,6 +360,14 @@
                 });
             }
             createWebsocket();
+            function resizeText(element) {
+                let size = 40;
+                element.style = `font-size: ${size}pt`;
+                while (element.scrollWidth > element.offsetWidth) {
+                    size--;
+                    element.style = `font-size: ${size}pt`;
+                }
+            }
             let timeout;
             function showNextImage(index) {
                 let mediaContainer = document.getElementById("media-container");

@@ -226,6 +226,8 @@ body {
     padding-left: 22%;
     font-size: 40pt;
     font-weight: 500;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .event-description {
