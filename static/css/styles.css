@@ -63,8 +63,10 @@ body {
 
 #header-time {
     padding-left: 23%;
-    font-size: 80pt;
+    font-size: 71pt;
     overflow: hidden;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
 }
 
 #header-countdown {
