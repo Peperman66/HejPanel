@@ -12,6 +12,8 @@ import {GetWeatherData} from '../handlers/weather.ts';
 import {GetEventData, SaveEventData} from '../handlers/events.ts';
 import {GetMediaData, SaveMediaData} from '../handlers/media.ts';
 
+import {CallOnSetTime} from '../libs/time_call.ts'
+
 const login: string = config({safe: true}).LOGIN;
 const sockets = new Map<string, WebSocket>();
 
@@ -130,7 +132,7 @@ function sendReload(sock: WebSocket) {
     }));
 }
 
-setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000) //every 6 hours
-setInterval(() => {sockets.forEach(sock => sendWeatherData(sock))}, 30*60*1000) //every 30 minutes
+setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000); //every 6 hours
+CallOnSetTime(() => sockets.forEach(sock => sendWeatherData(sock)), 30*60*1000); //every 30 minutes
 
 export default apiRouter;
