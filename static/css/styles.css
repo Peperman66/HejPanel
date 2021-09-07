@@ -98,7 +98,7 @@ body {
     width: 100%;
     padding: 2% 10%;
     display: grid;
-    grid-template-columns: 6fr 2fr 4fr;
+    grid-template-columns: 12fr 5fr 7fr;
     grid-template-rows: 2fr 2fr 3fr;
     grid-template-areas: 
         "temperature temperature temperature-high"
@@ -119,13 +119,14 @@ body {
 #weather-temperature-image {
     height: 100%;
     position: relative;
-    left: -5%;
+    left: -2%;
 }
 
 #weather-temperature-text {
     position: relative;
-    left: -10%;
+    left: -4%;
     font-size: 45pt;
+    font-weight: 700;
     white-space: nowrap;
 }
 
