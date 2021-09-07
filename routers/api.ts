@@ -55,6 +55,15 @@ apiRouter
                 });
         }
     })
+    .post('/api/reload', ctx => {
+        if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+            ctx.response.status = 401;
+            ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+        } else {
+            sockets.forEach(sock => sendReload(sock));
+            ctx.response.status = 204;
+        }
+    })
 
 async function handleWs(sock: WebSocket) {
     const socketId = v4.generate();
@@ -112,7 +121,13 @@ async function sendMediaData(sock: WebSocket) {
     sock.send(JSON.stringify({
         type: 'media',
         data: await GetMediaData()
-    }))
+    }));
+}
+
+function sendReload(sock: WebSocket) {
+    sock.send(JSON.stringify({
+        type: "reload"
+    }));
 }
 
 setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000) //every 6 hours
