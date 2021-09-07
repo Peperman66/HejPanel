@@ -283,69 +283,80 @@
                 "LunchThree": "lunch-three"
             }
             let weatherImageBaseUrl = "http://openweathermap.org/img/wn/"
-            let websocket = new WebSocket(`ws://${window.location.hostname}/api/ws`);
             function getHoursAndMins(date) {
                 return `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
             }
-            websocket.addEventListener('message', event => {
-                let data = JSON.parse(event.data);
-                if (data.type === "lunch") {
-                    let lunchData = data.data;
-                    for (let lunchName in lunchNames) {
-                        let divId = lunchNames[lunchName];
-                        document.getElementById(divId).getElementsByClassName('lunch-description')[0].innerHTML = lunchData[lunchName];
-                        document.getElementById(divId).style = lunchData[lunchName] ? "" : "display: none;";
-                    }
-                } else if (data.type === "weather") {
-                    let weatherData = data.data;
-                    document.getElementById("weather-temperature-image").src = weatherImageBaseUrl + weatherData.CurrentTemperatureIcon + "@2x.png";
-                    document.getElementById("weather-temperature-text").innerText = `${weatherData.CurrentTemperature} °C`;
-                    document.getElementById("weather-highs-text").innerText = `${weatherData.MaxTemperature} °C`;
-                    document.getElementById("weather-lows-text").innerText = `${weatherData.MinTemperature} °C`;
-                    document.getElementById("weather-first-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon1 + "@2x.png";
-                    let time1 = new Date(weatherData.NextTemperatureTime1 * 1000);
-                    document.getElementById("weather-first-time-text").innerText = getHoursAndMins(time1);
-                    document.getElementById("weather-second-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon2 + "@2x.png";
-                    let time2 = new Date(weatherData.NextTemperatureTime2 * 1000);
-                    document.getElementById("weather-second-time-text").innerText = getHoursAndMins(time2);
-                } else if (data.type === "events") {
-                    let eventsData = data.data;
-                    let eventsContainer = document.getElementById("events-container");
-                    for (let i = 0; i < eventsContainer.getElementsByClassName("event").length; i++) {
-                        if (i >= eventsData.length || eventsData[i].Name === "") {
-                            eventsContainer.getElementsByClassName("event")[i].style = "display: none";
-                        } else {
-                            eventsContainer.getElementsByClassName("event")[i].style = "";
-                            eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
-                            eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
-                            eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = eventsData[i].IsImportant === true ? "!" : "i";
+            function createWebsocket() {
+                let websocket = new WebSocket(`ws://${window.location.hostname}/api/ws`);
+                websocket.addEventListener('open', event => {
+                    console.log("Websocked opened!");
+                });
+                websocket.addEventListener('message', event => {
+                    let data = JSON.parse(event.data);
+                    if (data.type === "lunch") {
+                        let lunchData = data.data;
+                        for (let lunchName in lunchNames) {
+                            let divId = lunchNames[lunchName];
+                            document.getElementById(divId).getElementsByClassName('lunch-description')[0].innerHTML = lunchData[lunchName];
+                            document.getElementById(divId).style = lunchData[lunchName] ? "" : "display: none;";
+                        }
+                    } else if (data.type === "weather") {
+                        let weatherData = data.data;
+                        document.getElementById("weather-temperature-image").src = weatherImageBaseUrl + weatherData.CurrentTemperatureIcon + "@2x.png";
+                        document.getElementById("weather-temperature-text").innerText = `${weatherData.CurrentTemperature} °C`;
+                        document.getElementById("weather-highs-text").innerText = `${weatherData.MaxTemperature} °C`;
+                        document.getElementById("weather-lows-text").innerText = `${weatherData.MinTemperature} °C`;
+                        document.getElementById("weather-first-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon1 + "@2x.png";
+                        let time1 = new Date(weatherData.NextTemperatureTime1 * 1000);
+                        document.getElementById("weather-first-time-text").innerText = getHoursAndMins(time1);
+                        document.getElementById("weather-second-time-image").src = weatherImageBaseUrl + weatherData.NextTemperatureIcon2 + "@2x.png";
+                        let time2 = new Date(weatherData.NextTemperatureTime2 * 1000);
+                        document.getElementById("weather-second-time-text").innerText = getHoursAndMins(time2);
+                    } else if (data.type === "events") {
+                        let eventsData = data.data;
+                        let eventsContainer = document.getElementById("events-container");
+                        for (let i = 0; i < eventsContainer.getElementsByClassName("event").length; i++) {
+                            if (i >= eventsData.length || eventsData[i].Name === "") {
+                                eventsContainer.getElementsByClassName("event")[i].style = "display: none";
+                            } else {
+                                eventsContainer.getElementsByClassName("event")[i].style = "";
+                                eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
+                                eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
+                                eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = eventsData[i].IsImportant === true ? "!" : "i";
+                            }
+                        }
+                    } else if (data.type === "media") {
+                        stopSlideshow()
+                        let mediaData = data.data;
+                        let mediaContainer = document.getElementById("media-container")
+                        mediaContainer.innerHTML = "";
+                        for (let i = 0; i < mediaData.length; i++) {
+                            let imgContainer = document.createElement("div");
+                            let img = document.createElement("img");
+                            imgContainer.classList.add("media-image-wrapper");
+                            img.classList.add("media-image");
+                            img.src = `media/${mediaData[i].Image}.png`;
+                            imgContainer.appendChild(img);
+                            mediaContainer.appendChild(imgContainer);
+                            if (mediaData[i].Description !== "") {
+                                let textSpan = document.createElement("span");
+                                textSpan.classList.add("media-image-text");
+                                textSpan.textContent = mediaData[i].Description;
+                                imgContainer.appendChild(textSpan);
+                            }
+                        }
+                        if (mediaContainer.children.length > 0) {
+                            showNextImage(0);
                         }
                     }
-                } else if (data.type === "media") {
-                    stopSlideshow()
-                    let mediaData = data.data;
-                    let mediaContainer = document.getElementById("media-container")
-                    mediaContainer.innerHTML = "";
-                    for (let i = 0; i < mediaData.length; i++) {
-                        let imgContainer = document.createElement("div");
-                        let img = document.createElement("img");
-                        imgContainer.classList.add("media-image-wrapper");
-                        img.classList.add("media-image");
-                        img.src = `media/${mediaData[i].Image}.png`;
-                        imgContainer.appendChild(img);
-                        mediaContainer.appendChild(imgContainer);
-                        if (mediaData[i].Description !== "") {
-                            let textSpan = document.createElement("span");
-                            textSpan.classList.add("media-image-text");
-                            textSpan.textContent = mediaData[i].Description;
-                            imgContainer.appendChild(textSpan);
-                        }
-                    }
-                    if (mediaContainer.children.length > 0) {
-                        showNextImage(0);
-                    }
-                }
-            });
+                });
+                websocket.addEventListener('close', event => {
+                    console.warn("Websocket closed! Attempting to reconnect after 30 seconds.");
+                    setTimeout(createWebsocket, 30*1000); //30 seconds
+                    websocket.close();
+                });
+            }
+            createWebsocket();
             let timeout;
             function showNextImage(index) {
                 let mediaContainer = document.getElementById("media-container");
