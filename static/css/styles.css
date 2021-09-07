@@ -303,6 +303,11 @@ body {
     z-index: -1;
 }
 
+#edit-forms-container {
+    display: flex;
+    justify-content: space-around;
+}
+
 .lunch-meal {
     display: flex;
     align-items: center;
@@ -335,7 +340,7 @@ body {
 
 .media-image-display {
     aspect-ratio: 16/9;
-    width: 20%;
+    width: 100%;
 }
 
 .round {

@@ -9,68 +9,76 @@
     </head>
     <body>
         <h1>Úprava panelu</h1>
-        <h2>Aktuality</h2>
-        <form id="event-form" onsubmit="return sendEvents(this)">
-            <div class="event-editbox">
-                <h3>Aktualita č. 1</h3>
-                <input type="text" name="event-header" placeholder="Název"><br>
-                <textarea name="event-content" placeholder="Obsah"></textarea><br>
-                <label><input type="checkbox" name="event-important">Důležité</label><br>
+        <div id="edit-forms-container">
+            <div class="form-container">
+                <h2>Aktuality</h2>
+                <form id="event-form" onsubmit="return sendEvents(this)">
+                    <div class="event-editbox">
+                        <h3>Aktualita č. 1</h3>
+                        <input type="text" name="event-header" placeholder="Název"><br>
+                        <textarea name="event-content" placeholder="Obsah"></textarea><br>
+                        <label><input type="checkbox" name="event-important">Důležité</label><br>
+                    </div>
+                    <div class="event-editbox">
+                        <h3>Aktualita č. 2</h3>
+                        <input type="text" name="event-header" placeholder="Název"><br>
+                        <textarea name="event-content" placeholder="Obsah"></textarea><br>
+                        <label><input type="checkbox" name="event-important">Důležité</label><br>
+                    </div>
+                    <div class="event-editbox">
+                        <h3>Aktualita č. 3</h3>
+                        <input type="text" name="event-header" placeholder="Název"><br>
+                        <textarea name="event-content" placeholder="Obsah"></textarea><br>
+                        <label><input type="checkbox" name="event-important">Důležité</label><br>
+                    </div>
+                    <div class="event-editbox">
+                        <h3>Aktualita č. 4</h3>
+                        <input type="text" name="event-header" placeholder="Název"><br>
+                        <textarea name="event-content" placeholder="Obsah"></textarea><br>
+                        <label><input type="checkbox" name="event-important">Důležité</label><br>
+                    </div>
+                    <div class="event-editbox">
+                        <h3>Aktualita č. 5</h3>
+                        <input type="text" name="event-header" placeholder="Název"><br>
+                        <textarea name="event-content" placeholder="Obsah"></textarea><br>
+                        <label><input type="checkbox" name="event-important">Důležité</label><br>
+                    </div>
+                    <hr>
+                    <input type="submit" value="Odeslat aktuality">
+                </form>
             </div>
-            <div class="event-editbox">
-                <h3>Aktualita č. 2</h3>
-                <input type="text" name="event-header" placeholder="Název"><br>
-                <textarea name="event-content" placeholder="Obsah"></textarea><br>
-                <label><input type="checkbox" name="event-important">Důležité</label><br>
+            <form action="/api/reload" method="POST">
+                <input type="submit" value="Obnovit stránku HejPanel">
+            </form>
+            <div class="media-form-container">
+                <h2>Obrázky</h2>
+                <form id="media-form" onsubmit="return sendImages(this)">
+                    <div class="media-edit">
+                        <h3>Obrázek č. 1</h3>
+                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                        <img src="" class="media-image-display" name="media-image-display"><br>
+                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
+                    </div>
+                    <div class="media-edit">
+                        <h3>Obrázek č. 2</h3>
+                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                        <img src="" class="media-image-display" name="media-image-display"><br>
+                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
+                    </div>
+                    <div class="media-edit">
+                        <h3>Obrázek č. 3</h3>
+                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                        <img src="" class="media-image-display" name="media-image-display"><br>
+                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
+                    </div>
+                    <hr>
+                    <input type="submit" value="Odeslat obrázky">
+                </form>
             </div>
-            <div class="event-editbox">
-                <h3>Aktualita č. 3</h3>
-                <input type="text" name="event-header" placeholder="Název"><br>
-                <textarea name="event-content" placeholder="Obsah"></textarea><br>
-                <label><input type="checkbox" name="event-important">Důležité</label><br>
-            </div>
-            <div class="event-editbox">
-                <h3>Aktualita č. 4</h3>
-                <input type="text" name="event-header" placeholder="Název"><br>
-                <textarea name="event-content" placeholder="Obsah"></textarea><br>
-                <label><input type="checkbox" name="event-important">Důležité</label><br>
-            </div>
-            <div class="event-editbox">
-                <h3>Aktualita č. 5</h3>
-                <input type="text" name="event-header" placeholder="Název"><br>
-                <textarea name="event-content" placeholder="Obsah"></textarea><br>
-                <label><input type="checkbox" name="event-important">Důležité</label><br>
-            </div>
-            <input type="submit">
-        </form>
-        <h2>Obrázky</h2>
-        <form id="media-form" onsubmit="return sendImages(this)">
-            <div class="media-edit">
-                <h3>Obrázek č. 1</h3>
-                <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                <img src="" class="media-image-display" name="media-image-display"><br>
-                <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-            </div>
-            <div class="media-edit">
-                <h3>Obrázek č. 2</h3>
-                <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                <img src="" class="media-image-display" name="media-image-display"><br>
-                <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-            </div>
-            <div class="media-edit">
-                <h3>Obrázek č. 3</h3>
-                <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                <img src="" class="media-image-display" name="media-image-display"><br>
-                <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-            </div>
-            <input type="submit">
-        </form>
-        <form action="/api/reload" method="POST">
-            <input type="submit" value="Obnovit stránku HejPanel">
-        </form>
+        </div>
         <script>
             function sendEvents(form) {
                 let result = [];
