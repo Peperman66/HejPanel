@@ -348,6 +348,8 @@
                         if (mediaContainer.children.length > 0) {
                             showNextImage(0);
                         }
+                    } else if (data.type === "reload") {
+                        window.location.reload();
                     }
                 });
                 websocket.addEventListener('close', event => {
