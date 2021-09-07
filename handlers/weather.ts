@@ -53,7 +53,6 @@ function UpdateData() {
     GetData()
         .then(data => currentData = data);
     CallOnSetTime(UpdateData, 29*60*1000 /*29 minutes*/);
-    console.log("a");
 }
 
 UpdateData();
