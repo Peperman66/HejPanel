@@ -1,0 +1,27 @@
+* {
+    box-sizing: border-box;
+}
+
+.round {
+    border-radius: 200px;
+}
+
+.blue {
+    background-color: var(--blue);
+    color: var(--white);
+}
+
+.lightblue {
+    background-color: var(--lightblue);
+    color: var(--white);
+}
+
+.white {
+    background-color: var(--white);
+}
+
+:root {
+    --blue: #0060A1;
+    --lightblue: #528ab8;
+    --white: #ffffff;
+}

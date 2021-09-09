@@ -1,6 +1,4 @@
-* {
-    box-sizing: border-box;
-}
+@import "base.css";
 
 body {
     margin: 0px;
@@ -341,28 +339,4 @@ body {
 .media-image-display {
     aspect-ratio: 16/9;
     width: 100%;
-}
-
-.round {
-    border-radius: 200px;
-}
-
-.blue {
-    background-color: var(--blue);
-    color: var(--white);
-}
-
-.lightblue {
-    background-color: var(--lightblue);
-    color: var(--white);
-}
-
-.white {
-    background-color: var(--white);
-}
-
-:root {
-    --blue: #0060A1;
-    --lightblue: #528ab8;
-    --white: #ffffff;
 }
