@@ -16,6 +16,16 @@
     color: var(--white);
 }
 
+.orange {
+	background-color: var(--orange);
+    color: var(--black);
+}
+
+.darkorange {
+    background-color: var(--darkorange);
+    color: var(--white);
+}
+
 .white {
     background-color: var(--white);
 }
@@ -23,5 +33,8 @@
 :root {
     --blue: #0060A1;
     --lightblue: #528ab8;
+    --orange: #fa8422;
+    --darkorange: #b45404;
     --white: #ffffff;
+    --black: #000000;
 }
