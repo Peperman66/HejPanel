@@ -132,7 +132,11 @@ function sendReload(sock: WebSocket) {
     }));
 }
 
+function sendWeatherDataToAll() {
+    sockets.forEach(sock => sendWeatherData(sock));
+    CallOnSetTime(sendWeatherDataToAll, 30*60*1000) // 30 minutes
+}
 setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000); //every 6 hours
-CallOnSetTime(() => sockets.forEach(sock => sendWeatherData(sock)), 30*60*1000); //every 30 minutes
+sendWeatherDataToAll();
 
 export default apiRouter;
