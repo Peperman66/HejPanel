@@ -9,6 +9,9 @@
     </head>
     <body>
         <h1>Úprava panelu</h1>
+        <form action="/api/reload" method="POST">
+            <input type="submit" value="Obnovit stránku HejPanel">
+        </form>
         <div id="edit-forms-container">
             <div class="form-container">
                 <h2>Aktuality</h2>
@@ -47,10 +50,7 @@
                     <input type="submit" value="Odeslat aktuality">
                 </form>
             </div>
-            <form action="/api/reload" method="POST">
-                <input type="submit" value="Obnovit stránku HejPanel">
-            </form>
-            <div class="media-form-container">
+            <div class="form-container">
                 <h2>Obrázky</h2>
                 <form id="media-form" onsubmit="return sendImages(this)">
                     <div class="media-edit">

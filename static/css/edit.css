@@ -5,9 +5,33 @@ body {
     font-family: 'Montserrat', sans-serif;
 }
 
+.event-editbox, .media-edit {
+    margin-top: 30px;
+}
+
+.form-container {
+    width: 20%;
+}
+
+#event-form textarea {
+    width: 100%;
+    height: 70px;
+    resize: none;
+}
+
+#event-form input[type=text] {
+    width: 100%;
+}
+
 #edit-forms-container {
     display: flex;
     justify-content: space-around;
+}
+
+#media-form textarea {
+    width: 100%;
+    height: 40px;
+    resize: none;
 }
 
 .media-image-display {
