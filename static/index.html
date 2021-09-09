@@ -322,7 +322,17 @@
                                 eventsContainer.getElementsByClassName("event")[i].style = "";
                                 eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
                                 eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
-                                eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = eventsData[i].IsImportant === true ? "!" : "i";
+                                if (eventsData[i].IsImportant === true) {
+                                    eventsContainer.getElementsByClassName("event-icon-char-background")[i].classList.replace("blue", "orange");
+                                    eventsContainer.getElementsByClassName("event-title-background")[i].classList.replace("blue", "orange");
+                                    eventsContainer.getElementsByClassName("event-description-background")[i].classList.replace("lightblue", "darkorange");
+                                    eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = "!";
+                                } else {
+                                    eventsContainer.getElementsByClassName("event-icon-char-background")[i].classList.replace("orange", "blue");
+                                    eventsContainer.getElementsByClassName("event-title-background")[i].classList.replace("orange", "blue");
+                                    eventsContainer.getElementsByClassName("event-description-background")[i].classList.replace("darkorange", "lightblue");
+                                    eventsContainer.getElementsByClassName("event-icon-char")[i].innerText = "i";
+                                }
                                 resizeText(eventsContainer.getElementsByClassName("event-title")[i]);
                             }
                         }
