@@ -1,0 +1,16 @@
+@import "base.css";
+
+body {
+    text-align: center;
+    font-family: 'Montserrat', sans-serif;
+}
+
+#edit-forms-container {
+    display: flex;
+    justify-content: space-around;
+}
+
+.media-image-display {
+    aspect-ratio: 16/9;
+    width: 100%;
+}
