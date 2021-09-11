@@ -16,7 +16,10 @@ export type Weather = {
 let currentData: Weather;
 
 
-export function GetWeatherData() {
+export async function GetWeatherData() {
+    if (currentData === undefined) {
+        return await GetData();
+    }
     return currentData;
 }
 

@@ -98,17 +98,17 @@ async function handleWs(sock: WebSocket) {
     }
 }
 
-function sendLunchData(sock: WebSocket) {
+async function sendLunchData(sock: WebSocket) {
     sock.send(JSON.stringify({
         type: 'lunch',
-        data: GetLunchData()
+        data: await GetLunchData()
     }));
 }
 
-function sendWeatherData(sock: WebSocket) {
+async function sendWeatherData(sock: WebSocket) {
     sock.send(JSON.stringify({
         type: 'weather',
-        data: GetWeatherData()
+        data: await GetWeatherData()
     }))
 }
 

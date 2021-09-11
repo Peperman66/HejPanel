@@ -10,7 +10,10 @@ export type Lunch = {
 
 let currentData: Lunch;
 
-export function GetLunchData(): Lunch {
+export async function GetLunchData(): Promise<Lunch> {
+    if (currentData === undefined) {
+        await Parse();
+    }
     return currentData;
 }
 
