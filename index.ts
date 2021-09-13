@@ -46,12 +46,12 @@ let settings: ListenOptions = {
     port: port
 }
 
-if (env.HTTPS_CERTFILELOCATION !== null) {
-    // Convert to ListnOptionsTls, I didn't find any other way
+if (env.TLS_CERTFILELOCATION !== undefined) {
+    // Convert to ListenOptionsTls, I didn't find any other way
     settings = (settings as ListenOptions) as ListenOptionsTls;
     settings.secure = true;
-    settings.certFile = env.HTTPS_CERTFILELOCATION;
-    settings.keyFile = env.HTTPS_KEYFILELOCATION;
+    settings.certFile = env.TLS_CERTFILELOCATION;
+    settings.keyFile = env.TLS_KEYFILELOCATION;
 }
 
 await app.listen(settings);
