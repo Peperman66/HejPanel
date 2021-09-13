@@ -283,11 +283,12 @@
                 "LunchThree": "lunch-three"
             }
             let weatherImageBaseUrl = "http://openweathermap.org/img/wn/"
+            let websocketUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${location.hostname}/api/ws`;
             function getHoursAndMins(date) {
                 return `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
             }
             function createWebsocket() {
-                let websocket = new WebSocket(`ws://${window.location.hostname}/api/ws`);
+                let websocket = new WebSocket(websocketUrl);
                 websocket.addEventListener('open', event => {
                     console.log("Websocked opened!");
                 });

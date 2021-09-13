@@ -6,3 +6,7 @@
 
 # Database files
 db/
+
+# Https stuff
+*.key
+*.cert
