@@ -21,6 +21,11 @@ export function SaveMediaData(data: Images): Promise<void> {
             Description: data[i].Description
         }
     }
+    for (const file of Deno.readDirSync('db/images/')) {
+        if (!images.some((img) => file.name.split('.')[0] === img.Image)) {
+            Deno.removeSync(`db/images/${file.name}`);
+        }
+    }
     return Deno.writeTextFile('db/media.json', JSON.stringify(images));
 }
 
