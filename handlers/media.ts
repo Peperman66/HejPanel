@@ -14,7 +14,7 @@ export function SaveMediaData(data: Images): Promise<void> {
     } catch {}
     for (let i = 0; i < data.length; i++) {
         const imageData = data[i].Image;
-        const imageHash = sha256(imageData, 'base64', 'hex').slice(0, 10) as string;
+        const imageHash = sha256(imageData, 'base64', 'hex').slice(0, 7) as string;
         Deno.writeFileSync(`db/images/${imageHash}.png`, decode(imageData));
         images[i] = {
             Image: imageHash,
