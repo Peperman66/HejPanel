@@ -7,8 +7,8 @@ import {
 import { v4 } from 'https://deno.land/std@0.99.0/uuid/mod.ts';
 import { config } from 'https://deno.land/x/dotenv@v2.0.0/mod.ts';
 
-import {GetLunchData} from '../handlers/lunch.ts';
-import {GetWeatherData} from '../handlers/weather.ts';
+import {GetLunchData, UpdateLunchData} from '../handlers/lunch.ts';
+import {GetWeatherData, UpdateWeatherData} from '../handlers/weather.ts';
 import {GetEventData, SaveEventData} from '../handlers/events.ts';
 import {GetMediaData, SaveMediaData} from '../handlers/media.ts';
 
@@ -63,6 +63,30 @@ apiRouter
             ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
         } else {
             sockets.forEach(sock => sendReload(sock));
+            ctx.response.status = 204;
+        }
+    })
+    .post('/api/updatelunch', ctx => {
+        if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+            ctx.response.status = 401;
+            ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+        } else {
+            UpdateLunchData()
+            .then(() => {
+                sockets.forEach(sock => sendLunchData(sock));
+            })
+            ctx.response.status = 204;
+        }
+    })
+    .post('/api/updateweather', ctx => {
+        if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+            ctx.response.status = 401;
+            ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+        } else {
+            UpdateWeatherData()
+            .then(() => {
+                sockets.forEach(sock => sendWeatherData(sock));
+            })
             ctx.response.status = 204;
         }
     })

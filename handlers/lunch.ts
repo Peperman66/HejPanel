@@ -49,9 +49,9 @@ function Parse(): Promise<Lunch> {
 }
 
 
-function UpdateData() {
-    Parse().then(data => currentData = data);
+export function UpdateLunchData() {
+    return Parse().then(data => currentData = data);
 }
 
-UpdateData();
-setInterval(UpdateData, 6*60*60*1000) // 6 hours
+UpdateLunchData();
+setInterval(UpdateLunchData, 6*60*60*1000) // 6 hours
