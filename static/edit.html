@@ -63,41 +63,18 @@
             <div class="form-container">
                 <h2>Obrázky</h2>
                 <form id="media-form" onsubmit="return sendImages(this)">
-                    <div class="media-edit">
-                        <h3>Obrázek č. 1</h3>
-                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                        <img src="" class="media-image-display" name="media-image-display"><br>
-                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
+                    <template id="media-edit-template">
+                        <div class="media-edit">
+                            <h3 class="image-title">Obrázek č. x</h3>
+                            <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
+                            <img src="" class="media-image-display" name="media-image-display"><br>
+                            <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                            <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
+                        </div>
+                    </template>
+                    <div id="media-form-edit-container">
                     </div>
-                    <div class="media-edit">
-                        <h3>Obrázek č. 2</h3>
-                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                        <img src="" class="media-image-display" name="media-image-display"><br>
-                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-                    </div>
-                    <div class="media-edit">
-                        <h3>Obrázek č. 3</h3>
-                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                        <img src="" class="media-image-display" name="media-image-display"><br>
-                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-                    </div>
-                    <div class="media-edit">
-                        <h3>Obrázek č. 4</h3>
-                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                        <img src="" class="media-image-display" name="media-image-display"><br>
-                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-                    </div>
-                    <div class="media-edit">
-                        <h3>Obrázek č. 5</h3>
-                        <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
-                        <img src="" class="media-image-display" name="media-image-display"><br>
-                        <textarea name="media-image-description" placeholder="Popis"></textarea><br>
-                        <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
-                    </div>
+                    
                     <hr>
                     <input type="submit" value="Odeslat obrázky">
                 </form>
@@ -143,11 +120,13 @@
                 return false;
             }
             function deleteImage(button) {
+                removeImageEntry(button.parentNode);
                 button.parentNode.getElementsByClassName("media-image-display")[0].src = "";
             }
             function displayUploadedImage(input) {
                 let targetElement = input.parentNode.getElementsByTagName("img")[0];
                 targetElement.src = URL.createObjectURL(input.files[0]);
+                addImageEntry();
             }
             function getBase64FromImage(img) {
                 let canvas = document.createElement("canvas");
@@ -160,6 +139,28 @@
                 canvas.remove();
                 return result;
             }
+            function removeImageEntry(div) {
+                let baseDiv = document.getElementById("media-form-edit-container");
+                if (div.getElementsByClassName("media-image-display")[0].src === window.location.href) return;
+                let found = false;
+                for (let i = 0; i < baseDiv.children.length; i++) {
+                    if (found) {
+                        baseDiv.children[i].getElementsByClassName("image-title")[0].innerHTML = `Obrázek č. ${i}`; //Index lowered by one for all next entries
+                    }
+                    if (baseDiv.children[i] == div) {
+                        found = true;
+                    }
+                }
+                div.remove();
+            }
+            function addImageEntry() {
+                let baseDiv = document.getElementById("media-form-edit-container");
+                let htmlTemplate = document.getElementById("media-edit-template").content.cloneNode(true);
+                htmlTemplate.querySelector(".image-title").innerHTML = `Obrázek č. ${baseDiv.children.length + 1}`;
+                baseDiv.appendChild(htmlTemplate);
+                return htmlTemplate;
+            }
+            addImageEntry();
         </script>
         <script>
             let eventForm = document.getElementById("event-form");
@@ -176,9 +177,16 @@
                     }
                 } else if (data.type === "media") {
                     let mediaData = data.data;
+                    let baseDiv = document.getElementById("media-form-edit-container");
                     for (let i = 0; i < mediaData.length; i++){
+                        if (baseDiv.children.length <= i + 1) {
+                            addImageEntry();
+                        }
                         mediaForm.getElementsByClassName("media-image-display")[i].src = `media/${mediaData[i].Image}.png`;
                         mediaForm.elements["media-image-description"][i].value = mediaData[i].Description;
+                    }
+                    for (let i = mediaData.length; i < baseDiv.children.length - 1; i++) {
+                        removeImageEntry(baseDiv.children[i]);
                     }
                 }
             });
