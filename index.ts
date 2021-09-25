@@ -6,6 +6,9 @@ const app = new Application();
 const env = config({safe: true});
 const port: number = parseInt(env.PORT);
 
+export const controller = new AbortController();
+const signal = controller.signal;
+
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
 
@@ -43,7 +46,8 @@ app.use(async (ctx) => {
 });
 
 let settings: ListenOptions = {
-    port: port
+    port: port,
+    signal: signal
 }
 
 if (env.TLS_CERTFILELOCATION !== undefined) {
@@ -55,3 +59,5 @@ if (env.TLS_CERTFILELOCATION !== undefined) {
 }
 
 await app.listen(settings);
+
+Deno.exit();

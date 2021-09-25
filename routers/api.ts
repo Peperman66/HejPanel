@@ -13,6 +13,7 @@ import {GetEventData, SaveEventData} from '../handlers/events.ts';
 import {GetMediaData, SaveMediaData} from '../handlers/media.ts';
 
 import {CallOnSetTime} from '../libs/time_call.ts'
+import {controller} from '../index.ts';
 
 const login: string = config({safe: true}).LOGIN;
 const sockets = new Map<string, WebSocket>();
@@ -88,6 +89,15 @@ apiRouter
                 sockets.forEach(sock => sendWeatherData(sock));
             })
             ctx.response.status = 204;
+        }
+    })
+    .post('/api/shutdown', ctx => {
+        if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
+            ctx.response.status = 401;
+            ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
+        } else {
+            ctx.response.status = 204;
+            controller.abort();
         }
     })
 
