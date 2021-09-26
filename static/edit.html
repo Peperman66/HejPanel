@@ -155,6 +155,7 @@
             }
             function addImageEntry() {
                 let baseDiv = document.getElementById("media-form-edit-container");
+                if (baseDiv.children.length > 0 && baseDiv.children[baseDiv.children.length - 1].getElementsByClassName("media-image-display")[0].src === window.location.href) return;
                 let htmlTemplate = document.getElementById("media-edit-template").content.cloneNode(true);
                 htmlTemplate.querySelector(".image-title").innerHTML = `Obrázek č. ${baseDiv.children.length + 1}`;
                 baseDiv.appendChild(htmlTemplate);
