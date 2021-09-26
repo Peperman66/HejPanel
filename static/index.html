@@ -284,6 +284,7 @@
             }
             let weatherImageBaseUrl = "http://openweathermap.org/img/wn/"
             let websocketUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${location.hostname}/api/ws`;
+            let mediaData = [];
             function getHoursAndMins(date) {
                 return `${addZero(date.getHours())}:${addZero(date.getMinutes())}`;
             }
@@ -339,7 +340,7 @@
                         }
                     } else if (data.type === "media") {
                         stopSlideshow()
-                        let mediaData = data.data;
+                        mediaData = data.data;
                         let mediaContainer = document.getElementById("media-container")
                         mediaContainer.innerHTML = "";
                         for (let i = 0; i < mediaData.length; i++) {
@@ -350,12 +351,6 @@
                             img.src = `media/${mediaData[i].Image}.png`;
                             imgContainer.appendChild(img);
                             mediaContainer.appendChild(imgContainer);
-                            if (mediaData[i].Description !== "") {
-                                let textSpan = document.createElement("span");
-                                textSpan.classList.add("media-image-text");
-                                textSpan.textContent = mediaData[i].Description;
-                                imgContainer.appendChild(textSpan);
-                            }
                         }
                         if (mediaContainer.children.length > 0) {
                             showNextImage(0);
@@ -386,7 +381,7 @@
                 let nextIndex = (index + 1) % mediaContainer.children.length;
                 mediaContainer.children[previousIndex].classList.remove("media-image-wrapper-visible");
                 mediaContainer.children[index].classList.add("media-image-wrapper-visible");
-                timeout = setTimeout(showNextImage, 30*1000, nextIndex);
+                timeout = setTimeout(showNextImage, mediaData[index].Duration*1000, nextIndex);
             }
             function stopSlideshow() {
                 try {

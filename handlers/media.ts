@@ -3,7 +3,7 @@ import {decode} from 'https://deno.land/std@0.99.0/encoding/base64.ts';
 
 type Image = {
     Image: string,
-    Description: string
+    Duration: number;
 }
 export type Images = Array<Image>;
 
@@ -18,7 +18,7 @@ export function SaveMediaData(data: Images): Promise<void> {
         Deno.writeFileSync(`db/images/${imageHash}.png`, decode(imageData));
         images[i] = {
             Image: imageHash,
-            Description: data[i].Description
+            Duration: data[i].Duration
         }
     }
     for (const file of Deno.readDirSync('db/images/')) {

@@ -68,7 +68,7 @@
                             <h3 class="image-title">Obrázek č. x</h3>
                             <input type="file" name="media-image" accept="image/*" onchange="displayUploadedImage(this)"><br>
                             <img src="" class="media-image-display" name="media-image-display"><br>
-                            <textarea name="media-image-description" placeholder="Popis"></textarea><br>
+                            <label>Doba trvání v sekundách: <input type="number" class="media-image-duration" name="media-image-duration" min="1" value="10"></label><br>
                             <button type="button" onclick="deleteImage(this)">Odstranit obrázek</button><br>
                         </div>
                     </template>
@@ -107,7 +107,7 @@
                     }
                     result.push({
                         Image: getBase64FromImage(form.getElementsByClassName("media-image-display")[i]),
-                        Description: form.elements["media-image-description"][i].value
+                        Duration: form.elements["media-image-duration"][i].value
                     });
                 }
                 fetch("/api/media", {
