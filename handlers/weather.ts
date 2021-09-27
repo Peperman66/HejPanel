@@ -39,10 +39,12 @@ function GetData(): Promise<Weather> {
             }
             let nextIndex = new Date().getMinutes() < 29 ? 1 : 2;
             nextIndex += new Date(data.hourly[nextIndex].dt*1000).getHours() === 14 ? 1 : 0;
+            nextIndex += new Date(data.hourly[nextIndex].dt*1000).getHours() === 16 ? 1 : 0;
             result.NextTemperatureTime1 = data.hourly[nextIndex].dt;
             result.NextTemperatureIcon1 = data.hourly[nextIndex].weather[0].icon;
             for (let i = 0; i < data.hourly.length; i++) {
-                if (result.NextTemperatureTime2 === 0 && new Date(data.hourly[i].dt*1000).getHours() === 14) {
+                const currentHour = new Date(data.hourly[i].dt*1000).getHours()
+                if (result.NextTemperatureTime2 === 0 && (currentHour === 14 || currentHour === 16)) {
                     result.NextTemperatureTime2 = data.hourly[i].dt;
                     result.NextTemperatureIcon2 = data.hourly[i].weather[0].icon;
                     break;
