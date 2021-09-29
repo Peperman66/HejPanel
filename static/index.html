@@ -381,7 +381,8 @@
                 let nextIndex = (index + 1) % mediaContainer.children.length;
                 mediaContainer.children[previousIndex].classList.remove("media-image-wrapper-visible");
                 mediaContainer.children[index].classList.add("media-image-wrapper-visible");
-                timeout = setTimeout(showNextImage, mediaData[index].Duration*1000, nextIndex);
+                let duration = mediaData[index].Duration*1000 || 10*1000;
+                timeout = setTimeout(showNextImage, duration, nextIndex);
             }
             function stopSlideshow() {
                 try {
