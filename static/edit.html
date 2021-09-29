@@ -185,7 +185,8 @@
                         }
                         mediaForm.getElementsByClassName("media-image-display")[i].src = `media/${mediaData[i].Image}.png`;
                         if (mediaData[i].Duration != null) { 
-                            mediaForm.elements["media-image-duration"][i].value = mediaData[i].Duration;
+                            let inputElement = mediaForm.elements["media-image-duration"][i] || mediaForm.elements["media-image-duration"];
+                            inputElement.value = mediaData[i].Duration;
                         }
                     }
                     for (let i = mediaData.length; i < baseDiv.children.length - 1; i++) {
