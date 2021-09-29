@@ -184,7 +184,9 @@
                             addImageEntry();
                         }
                         mediaForm.getElementsByClassName("media-image-display")[i].src = `media/${mediaData[i].Image}.png`;
-                        mediaForm.elements["media-image-description"][i].value = mediaData[i].Description;
+                        if (mediaData[i].Duration != null) { 
+                            mediaForm.elements["media-image-duration"][i].value = mediaData[i].Duration;
+                        }
                     }
                     for (let i = mediaData.length; i < baseDiv.children.length - 1; i++) {
                         removeImageEntry(baseDiv.children[i]);
