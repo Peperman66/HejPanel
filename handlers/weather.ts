@@ -37,7 +37,7 @@ function GetData(): Promise<Weather> {
                 NextTemperatureTime2: 0,
                 NextTemperatureIcon2: ""
             }
-            const nextIndex = new Date().getMinutes() < 29 ? 1 : 2;
+            const nextIndex = new Date().getMinutes() < 49 ? 1 : 2;
             result.NextTemperatureTime1 = data.hourly[nextIndex].dt;
             result.NextTemperatureIcon1 = data.hourly[nextIndex].weather[0].icon;
             for (let i = nextIndex + 1; i < data.hourly.length; i++) {
@@ -53,7 +53,7 @@ function GetData(): Promise<Weather> {
 }
 
 function UpdateData() {
-    UpdateWeatherData().then(() => CallOnSetTime(UpdateData, 29*60*1000 /*29 minutes*/));
+    UpdateWeatherData().then(() => CallOnSetTime(UpdateData, 49*60*1000 /*29 minutes*/));
 }
 
 export function UpdateWeatherData() {
