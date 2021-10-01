@@ -344,13 +344,10 @@
                         let mediaContainer = document.getElementById("media-container")
                         mediaContainer.innerHTML = "";
                         for (let i = 0; i < mediaData.length; i++) {
-                            let imgContainer = document.createElement("div");
                             let img = document.createElement("img");
-                            imgContainer.classList.add("media-image-wrapper");
                             img.classList.add("media-image");
                             img.src = `media/${mediaData[i].Image}.png`;
-                            imgContainer.appendChild(img);
-                            mediaContainer.appendChild(imgContainer);
+                            mediaContainer.appendChild(img);
                         }
                         if (mediaContainer.children.length > 0) {
                             showNextImage(0);
@@ -379,8 +376,8 @@
                 let mediaContainer = document.getElementById("media-container");
                 let previousIndex = (index + mediaContainer.children.length - 1) % mediaContainer.children.length;
                 let nextIndex = (index + 1) % mediaContainer.children.length;
-                mediaContainer.children[previousIndex].classList.remove("media-image-wrapper-visible");
-                mediaContainer.children[index].classList.add("media-image-wrapper-visible");
+                mediaContainer.children[previousIndex].classList.remove("media-image-visible");
+                mediaContainer.children[index].classList.add("media-image-visible");
                 let duration = mediaData[index].Duration*1000 || 10*1000;
                 timeout = setTimeout(showNextImage, duration, nextIndex);
             }
