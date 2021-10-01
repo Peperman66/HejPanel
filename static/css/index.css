@@ -238,6 +238,11 @@ body {
     text-indent: 5%;
 }
 
+.no-events {
+    font-size: 20pt;
+    font-weight: 600;
+}
+
 #media {
     grid-area: media;
     min-height: 100%;

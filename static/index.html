@@ -184,6 +184,9 @@
             </div>
             <div id="events">
                 <div id="events-container">
+                    <div class="no-events" style="display: none;">
+                        Zatím tu pro Vás nic nemáme.
+                    </div>
                     <div class="event">
                         <div class="event-icon-char-background round blue">
                             <span class="event-icon-char">i</span>
@@ -317,10 +320,12 @@
                     } else if (data.type === "events") {
                         let eventsData = data.data;
                         let eventsContainer = document.getElementById("events-container");
+                        let empty = true;
                         for (let i = 0; i < eventsContainer.getElementsByClassName("event").length; i++) {
                             if (i >= eventsData.length || eventsData[i].Name === "") {
                                 eventsContainer.getElementsByClassName("event")[i].style = "display: none";
                             } else {
+                                empty = false;
                                 eventsContainer.getElementsByClassName("event")[i].style = "";
                                 eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
                                 eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
@@ -338,6 +343,7 @@
                                 resizeText(eventsContainer.getElementsByClassName("event-title")[i]);
                             }
                         }
+                        document.getElementsByClassName("no-events")[0].style = empty ? "" : "display: none";
                     } else if (data.type === "media") {
                         stopSlideshow()
                         mediaData = data.data;
