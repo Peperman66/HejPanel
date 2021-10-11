@@ -53,7 +53,7 @@ function GetData(): Promise<Weather> {
 }
 
 function UpdateData() {
-    UpdateWeatherData().then(() => CallOnSetTime(UpdateData, 49*60*1000 /*29 minutes*/));
+    UpdateWeatherData().then(() => CallOnSetTime(UpdateData, 49*60*1000 + 30*1000 /*29 minutes and 30 seconds*/));
 }
 
 export function UpdateWeatherData() {
