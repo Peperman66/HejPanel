@@ -314,7 +314,8 @@ body {
 .lunch-type {
     font-weight: 700;
     font-size: 30pt;
-    margin-left: 15%;
+    margin-left: auto;
+    margin-right: 82%;
 }
 
 .lunch-description {
