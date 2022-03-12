@@ -1,5 +1,5 @@
-import { Application, ListenOptions, ListenOptionsTls } from 'https://deno.land/x/oak@v7.7.0/mod.ts';
-import { config } from 'https://deno.land/x/dotenv@v2.0.0/mod.ts';
+import { Application, ListenOptions, ListenOptionsTls } from 'https://deno.land/x/oak@v10.4.0/mod.ts';
+import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
 import apiRouter from './routers/api.ts';
 
 const app = new Application();

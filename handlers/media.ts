@@ -1,5 +1,5 @@
 import {sha256} from 'https://deno.land/x/sha256@v1.0.2/mod.ts';
-import {decode} from 'https://deno.land/std@0.99.0/encoding/base64.ts';
+import {decode} from 'https://deno.land/std@0.129.0/encoding/base64.ts';
 
 type Image = {
     Image: string,

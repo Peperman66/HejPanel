@@ -1,4 +1,4 @@
-import { config } from 'https://deno.land/x/dotenv@v2.0.0/mod.ts';
+import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
 import {CallOnSetTime} from '../libs/time_call.ts';
 
 const apiKey = config({safe: true}).OPENWEATHERMAP_APIKEY

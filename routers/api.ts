@@ -1,11 +1,6 @@
-import {Router} from 'https://deno.land/x/oak@v7.7.0/mod.ts';
-import {
-    WebSocket,
-    isWebSocketCloseEvent,
-    isWebSocketPongEvent,
-} from 'https://deno.land/std@0.99.0/ws/mod.ts';
-import { v4 } from 'https://deno.land/std@0.99.0/uuid/mod.ts';
-import { config } from 'https://deno.land/x/dotenv@v2.0.0/mod.ts';
+import {Router} from 'https://deno.land/x/oak@v10.4.0/mod.ts';
+import { v4 } from 'https://deno.land/std@0.129.0/uuid/mod.ts';
+import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
 
 import {GetLunchData, UpdateLunchData} from '../handlers/lunch.ts';
 import {GetWeatherData, UpdateWeatherData} from '../handlers/weather.ts';
@@ -20,8 +15,8 @@ const sockets = new Map<string, WebSocket>();
 
 const apiRouter = new Router();
 apiRouter
-    .get('/api/ws', async (ctx) => {
-        const sock = await ctx.upgrade();
+    .get('/api/ws', ctx => {
+        const sock = ctx.upgrade();
         handleWs(sock);
     })
     .post('/api/events', async (ctx) => {
@@ -101,35 +96,22 @@ apiRouter
         }
     })
 
-async function handleWs(sock: WebSocket) {
+function handleWs(sock: WebSocket) {
     const socketId = v4.generate();
-    sockets.set(socketId, sock);
 
-    sendLunchData(sock);
-    sendWeatherData(sock);
-    sendEventData(sock);
-    sendMediaData(sock);
-
-    try {
-        for await (const ev of sock) {
-            console.log(ev);
-            if (typeof ev === "string") {    
-                console.log(ev); 
-            } else if (isWebSocketPongEvent(ev)) {
-                //Pong event
-            } else if (isWebSocketCloseEvent(ev)) {
-                sockets.delete(socketId);
-            }
-        }
-
-    } catch (err) {
-        console.error(`failed to receive frame: ${err}`);
-
-        if (!sock.isClosed) {
-            await sock.close(1000).catch(console.error);
-            sockets.delete(socketId);
-        }
+    sock.onopen = () => {
+        sockets.set(socketId, sock);
+        sendLunchData(sock);
+        sendWeatherData(sock);
+        sendEventData(sock);
+        sendMediaData(sock);
     }
+
+    sock.onmessage = (e) => {
+        console.log(e.data);
+    }
+
+    sock.onclose = () => sockets.delete(socketId);
 }
 
 async function sendLunchData(sock: WebSocket) {
