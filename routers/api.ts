@@ -1,6 +1,7 @@
 import {Router} from 'https://deno.land/x/oak@v10.4.0/mod.ts';
 import { v4 } from 'https://deno.land/std@0.129.0/uuid/mod.ts';
-import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
+import { assert } from 'https://deno.land/std@0.129.0/testing/asserts.ts';
+import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
 
 import {GetLunchData, UpdateLunchData} from '../handlers/lunch.ts';
 import {GetWeatherData, UpdateWeatherData} from '../handlers/weather.ts';
@@ -10,7 +11,8 @@ import {GetMediaData, SaveMediaData} from '../handlers/media.ts';
 import {CallOnSetTime} from '../libs/time_call.ts'
 import {controller} from '../index.ts';
 
-const login: string = config({safe: true}).LOGIN;
+const login = Deno.env.get("LOGIN");
+assert(login != undefined);
 const sockets = new Map<string, WebSocket>();
 
 const apiRouter = new Router();

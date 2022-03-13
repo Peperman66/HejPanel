@@ -1,7 +1,7 @@
-import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
+import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
 import {CallOnSetTime} from '../libs/time_call.ts';
 
-const apiKey = config({safe: true}).OPENWEATHERMAP_APIKEY
+const apiKey = Deno.env.get("OPENWEATHERMAP_APIKEY");
 
 export type Weather = {
     CurrentTemperature: number,
