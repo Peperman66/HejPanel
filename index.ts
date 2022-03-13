@@ -10,7 +10,7 @@ const port: number = parseInt(Deno.env.get("PORT") || "80");
 export const controller = new AbortController();
 const signal = controller.signal;
 
-export const pool = new Pool(Deno.env.get("DATABASE_URL"), 4);
+export const pool = new Pool(Deno.env.get("DATABASE_URL"), 2, true);
 
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
