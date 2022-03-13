@@ -1,1 +1,1 @@
-web: deno run --unstable --allow-net --allow-write --allow-read --allow-env ./index.ts
+web: deno run --unstable --allow-net --allow-read --allow-env ./index.ts
