@@ -4,7 +4,7 @@ import apiRouter from './routers/api.ts';
 
 const app = new Application();
 const env = config({safe: true});
-const port: number = parseInt(env.PORT);
+const port: number = parseInt(env.PORT) || 80;
 
 export const controller = new AbortController();
 const signal = controller.signal;
