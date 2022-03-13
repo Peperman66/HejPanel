@@ -66,5 +66,5 @@ if (Deno.env.get("TLS_CERTFILELOCATION") !== undefined) {
 }
 
 await app.listen(settings);
-
+await pool.end();
 Deno.exit();
