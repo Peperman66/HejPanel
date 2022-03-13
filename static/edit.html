@@ -85,9 +85,9 @@
                 let result = [];
                 for (let i = 0; i < form.elements["event-header"].length; i++) {
                     result.push({
-                        Name: form.elements["event-header"][i].value,
-                        Description: form.elements["event-content"][i].value,
-                        IsImportant: form.elements["event-important"][i].checked
+                        name: form.elements["event-header"][i].value,
+                        description: form.elements["event-content"][i].value,
+                        isimportant: form.elements["event-important"][i].checked
                     });
                 }
                 fetch("/api/events", {
@@ -106,8 +106,8 @@
                         continue;
                     }
                     result.push({
-                        Image: getBase64FromImage(form.getElementsByClassName("media-image-display")[i]),
-                        Duration: form.elements["media-image-duration"][i].value
+                        image: getBase64FromImage(form.getElementsByClassName("media-image-display")[i]),
+                        duration: form.elements["media-image-duration"][i].value
                     });
                 }
                 fetch("/api/media", {
@@ -172,9 +172,9 @@
                 if (data.type === "events") {
                     let eventData = data.data;
                     for (let i = 0; i < eventData.length; i++){
-                        eventForm.elements["event-header"][i].value = eventData[i].Name;
-                        eventForm.elements["event-content"][i].value = eventData[i].Description;
-                        eventForm.elements["event-important"][i].checked = eventData[i].IsImportant;
+                        eventForm.elements["event-header"][i].value = eventData[i].name;
+                        eventForm.elements["event-content"][i].value = eventData[i].description;
+                        eventForm.elements["event-important"][i].checked = eventData[i].isimportant;
                     }
                 } else if (data.type === "media") {
                     let mediaData = data.data;
@@ -186,7 +186,7 @@
                         mediaForm.getElementsByClassName("media-image-display")[i].src = `media/${mediaData[i].Image}.png`;
                         if (mediaData[i].Duration != null) { 
                             let inputElement = mediaForm.elements["media-image-duration"][i] || mediaForm.elements["media-image-duration"];
-                            inputElement.value = mediaData[i].Duration;
+                            inputElement.value = mediaData[i].duration;
                         }
                     }
                     addImageEntry();

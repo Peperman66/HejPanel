@@ -1,8 +1,8 @@
 import { pool } from '../index.ts';
 
 type Image = {
-    Image: string,
-    Duration: number;
+    image: string,
+    duration: number;
 }
 export type Images = Array<Image>;
 
@@ -13,9 +13,9 @@ export async function SaveMediaData(data: Images): Promise<void> {
     transaction.queryArray('TRUNCATE TABLE media;');
 
     for (let i = 0; i < data.length; i++) {
-        const imageData = data[i].Image;
-        const imageDuration = data[i].Duration;
-        client.queryArray(`INSERT INTO media (Id, Image, Duration) VALUES (${i}, ${imageData}, ${imageDuration});`);
+        const imageData = data[i].image;
+        const imageDuration = data[i].duration;
+        transaction.queryArray(`INSERT INTO media (Id, Image, Duration) VALUES (${i}, '${imageData}', ${imageDuration});`);
     }
     await transaction.commit();
     client.release();

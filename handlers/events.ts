@@ -1,9 +1,9 @@
 import { pool } from '../index.ts';
 
 type Event = {
-    Name: string,
-    Description: string,
-    IsImportant: boolean
+    name: string,
+    description: string,
+    isimportant: boolean
 }
 export type Events = Array<Event>;
 
@@ -15,7 +15,7 @@ export async function SaveEventData(data: Events): Promise<void> {
 
     for (let i = 0; i < data.length; i++) {
         const currentEvent = data[i];
-        client.queryArray(`INSERT INTO events (Id, Name, Description, IsImportant) VALUES (${i}, ${currentEvent.Name}, ${currentEvent.Description}, ${currentEvent.IsImportant});`);
+        transaction.queryArray(`INSERT INTO events (Id, Name, Description, IsImportant) VALUES (${i}, '${currentEvent.name}', '${currentEvent.description}', ${currentEvent.isimportant});`);
     }
     await transaction.commit();
     client.release();

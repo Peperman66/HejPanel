@@ -322,14 +322,14 @@
                         let eventsContainer = document.getElementById("events-container");
                         let empty = true;
                         for (let i = 0; i < eventsContainer.getElementsByClassName("event").length; i++) {
-                            if (i >= eventsData.length || eventsData[i].Name === "") {
+                            if (i >= eventsData.length || eventsData[i].name === "") {
                                 eventsContainer.getElementsByClassName("event")[i].style = "display: none";
                             } else {
                                 empty = false;
                                 eventsContainer.getElementsByClassName("event")[i].style = "";
-                                eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].Name;
-                                eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].Description;
-                                if (eventsData[i].IsImportant === true) {
+                                eventsContainer.getElementsByClassName("event-title")[i].innerText = eventsData[i].name;
+                                eventsContainer.getElementsByClassName("event-description")[i].innerText = eventsData[i].description;
+                                if (eventsData[i].isimportant === true) {
                                     eventsContainer.getElementsByClassName("event-icon-char-background")[i].classList.replace("blue", "orange");
                                     eventsContainer.getElementsByClassName("event-title-background")[i].classList.replace("blue", "orange");
                                     eventsContainer.getElementsByClassName("event-description-background")[i].classList.replace("lightblue", "darkorange");
@@ -352,7 +352,7 @@
                         for (let i = 0; i < mediaData.length; i++) {
                             let img = document.createElement("img");
                             img.classList.add("media-image");
-                            img.src = mediaData[i].Image;
+                            img.src = mediaData[i].image;
                             mediaContainer.appendChild(img);
                         }
                         if (mediaContainer.children.length > 0) {
@@ -384,7 +384,7 @@
                 let nextIndex = (index + 1) % mediaContainer.children.length;
                 mediaContainer.children[previousIndex].classList.remove("media-image-visible");
                 mediaContainer.children[index].classList.add("media-image-visible");
-                let duration = mediaData[index].Duration*1000 || 10*1000;
+                let duration = mediaData[index].duration*1000 || 10*1000;
                 timeout = setTimeout(showNextImage, duration, nextIndex);
             }
             function stopSlideshow() {
