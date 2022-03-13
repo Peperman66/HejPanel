@@ -1,5 +1,5 @@
-import {sha256} from 'https://deno.land/x/sha256@v1.0.2/mod.ts';
-import {decode} from 'https://deno.land/std@0.129.0/encoding/base64.ts';
+import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
+import { Client } from 'https://deno.land/x/postgres@v0.15.0/mod.ts';
 
 type Image = {
     Image: string,
@@ -7,35 +7,25 @@ type Image = {
 }
 export type Images = Array<Image>;
 
+const client = new Client(config().DATABASE_URL);
+await client.connect();
+
 export function SaveMediaData(data: Images): Promise<void> {
-    const images: Images = [];
-    try {
-        Deno.mkdirSync('db/images/');
-    } catch {}
+    const transaction = client.createTransaction("save_media");
+    client.queryArray('TRUNCATE TABLE media;');
+
     for (let i = 0; i < data.length; i++) {
         const imageData = data[i].Image;
-        const imageHash = sha256(imageData, 'base64', 'hex').slice(0, 7) as string;
-        Deno.writeFileSync(`db/images/${imageHash}.png`, decode(imageData));
-        images[i] = {
-            Image: imageHash,
-            Duration: data[i].Duration
-        }
+        const imageDuration = data[i].Duration;
+        client.queryArray(`INSERT INTO media (Id, Image, Duration) VALUES (${i}, ${imageData}, ${imageDuration});`);
     }
-    for (const file of Deno.readDirSync('db/images/')) {
-        if (!images.some((img) => file.name.split('.')[0] === img.Image)) {
-            Deno.removeSync(`db/images/${file.name}`);
-        }
-    }
-    return Deno.writeTextFile('db/media.json', JSON.stringify(images));
+
+    return transaction.commit();
 }
 
-export function GetMediaData(): Promise<Images> {
-    return Deno.readTextFile('db/media.json')
-        .then(data => {
-            return JSON.parse(data);
-        })
-        .catch(err => {
-            console.log(err);
-            return [];
-        });
+export async function GetMediaData(): Promise<Images> {
+    const transaction = client.createTransaction("read_media", { read_only: true });
+    const data = await client.queryObject<Image>('SELECT Image, Duration FROM media ORDER BY ID;');
+    await transaction.commit();
+    return data.rows;
 }

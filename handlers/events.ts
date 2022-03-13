@@ -1,3 +1,6 @@
+import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
+import { Client } from 'https://deno.land/x/postgres@v0.15.0/mod.ts';
+
 type Event = {
     Name: string,
     Description: string,
@@ -5,25 +8,25 @@ type Event = {
 }
 export type Events = Array<Event>;
 
-function ParseData(data: unknown): Events {
-    const output = data as Events;
-    return output;
+const client = new Client(config().DATABASE_URL);
+await client.connect();
+
+export function SaveEventData(data: Events): Promise<void> {
+    const transaction = client.createTransaction("save_events");
+    client.queryArray('TRUNCATE TABLE events;');
+
+    for (let i = 0; i < data.length; i++) {
+        const currentEvent = data[i];
+        client.queryArray(`INSERT INTO events (Id, Name, Description, IsImportant) VALUES (${i}, ${currentEvent.Name}, ${currentEvent.Description}, ${currentEvent.IsImportant});`);
+    }
+    return transaction.commit();
 }
 
-export function SaveEventData(data: unknown): Promise<void> {
-    const parsedData = ParseData(data);
-    return Deno.writeTextFile('db/events.json', JSON.stringify(parsedData));
-}
+export async function GetEventData(): Promise<Events> {
+    const transaction = client.createTransaction("read_events", {read_only: true});
 
-export function GetEventData(): Promise<Events> {
-    return Deno.readTextFile('db/events.json')
-        .then(data => {
-            const obj: Events = JSON.parse(data);
-            return obj;
-        })
-        .catch(err => {
-            console.log(err);
-            return [];
-        });
+    const result = await client.queryObject<Event>('SELECT Name, Description, IsImportant FROM events ORDER BY Id;');
+    await transaction.commit();
+    return result.rows;
 }
 
