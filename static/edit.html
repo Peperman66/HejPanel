@@ -135,7 +135,7 @@
                 let context = canvas.getContext("2d");
                 context.drawImage(img, 0, 0);
                 let dataURL = canvas.toDataURL("image/png");
-                let result = dataURL.replace(/^data:image\/png;base64,/, "");
+                let result = dataURL;
                 canvas.remove();
                 return result;
             }
@@ -183,7 +183,7 @@
                         if (baseDiv.children.length <= i + 1) {
                             addImageEntry();
                         }
-                        mediaForm.getElementsByClassName("media-image-display")[i].src = `media/${mediaData[i].Image}.png`;
+                        mediaForm.getElementsByClassName("media-image-display")[i].src = mediaData[i].image;
                         if (mediaData[i].Duration != null) { 
                             let inputElement = mediaForm.elements["media-image-duration"][i] || mediaForm.elements["media-image-duration"];
                             inputElement.value = mediaData[i].duration;
