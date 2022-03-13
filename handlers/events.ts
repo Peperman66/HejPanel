@@ -1,5 +1,4 @@
-import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
-import { Client } from 'https://deno.land/x/postgres@v0.15.0/mod.ts';
+import { pool } from '../index.ts';
 
 type Event = {
     Name: string,
@@ -8,10 +7,8 @@ type Event = {
 }
 export type Events = Array<Event>;
 
-const client = new Client(config().DATABASE_URL);
-await client.connect();
-
-export function SaveEventData(data: Events): Promise<void> {
+export async function SaveEventData(data: Events): Promise<void> {
+    const client = await pool.connect();
     const transaction = client.createTransaction("save_events");
     client.queryArray('TRUNCATE TABLE events;');
 
@@ -19,14 +16,17 @@ export function SaveEventData(data: Events): Promise<void> {
         const currentEvent = data[i];
         client.queryArray(`INSERT INTO events (Id, Name, Description, IsImportant) VALUES (${i}, ${currentEvent.Name}, ${currentEvent.Description}, ${currentEvent.IsImportant});`);
     }
+    await client.end()
     return transaction.commit();
 }
 
 export async function GetEventData(): Promise<Events> {
+    const client = await pool.connect();
     const transaction = client.createTransaction("read_events", {read_only: true});
 
     const result = await client.queryObject<Event>('SELECT Name, Description, IsImportant FROM events ORDER BY Id;');
     await transaction.commit();
+    await client.end();
     return result.rows;
 }
 

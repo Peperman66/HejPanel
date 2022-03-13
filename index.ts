@@ -1,5 +1,6 @@
 import { Application, ListenOptions, ListenOptionsTls } from 'https://deno.land/x/oak@v10.4.0/mod.ts';
 import { config } from 'https://deno.land/x/dotenv@v3.2.0/mod.ts';
+import { Pool } from 'https://deno.land/x/postgres@v0.15.0/mod.ts';
 import apiRouter from './routers/api.ts';
 
 const app = new Application();
@@ -8,6 +9,8 @@ const port: number = parseInt(env.PORT) || 80;
 
 export const controller = new AbortController();
 const signal = controller.signal;
+
+export const pool = new Pool(config().DATABASE_URL, 2);
 
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
