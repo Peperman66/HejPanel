@@ -184,7 +184,7 @@
                             addImageEntry();
                         }
                         mediaForm.getElementsByClassName("media-image-display")[i].src = mediaData[i].image;
-                        if (mediaData[i].Duration != null) { 
+                        if (mediaData[i].duration != null) { 
                             let inputElement = mediaForm.elements["media-image-duration"][i] || mediaForm.elements["media-image-duration"];
                             inputElement.value = mediaData[i].duration;
                         }
