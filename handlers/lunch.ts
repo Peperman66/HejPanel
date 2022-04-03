@@ -22,6 +22,7 @@ const nameTable: Record<string, string> = {
     "Polévka ": "Soup",
     "Oběd 1 1": "LunchOne",
     "Oběd 2 1": "LunchTwo",
+    "Oběd 3 ": "LunchThree",
     "Svačina ": "Snack"
 }
 
