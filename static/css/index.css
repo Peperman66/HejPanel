@@ -334,3 +334,20 @@ body {
     max-height: 100%;
     margin: auto;    
 }
+
+@media only screen and (max-height: 1080px) {
+    #grid-container {
+        aspect-ratio: 16/9;
+        grid-template-areas:
+            "header weather events"
+            "media media events";
+        grid-template-columns: 1fr 4fr;
+    }
+    #lunch {
+        display: none;
+    }
+    #media-container {
+        width: 100%;
+        height: auto;
+    }
+}
