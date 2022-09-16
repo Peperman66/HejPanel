@@ -341,7 +341,7 @@ body {
         grid-template-areas:
             "header weather events"
             "media media events";
-        grid-template-columns: 1fr 4fr;
+        grid-template-rows: 1fr 4fr;
     }
     #lunch {
         display: none;
