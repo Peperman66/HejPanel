@@ -1,1 +1,0 @@
-web: deno run --unstable --allow-net --allow-read --allow-env --unsafely-ignore-certificate-errors ./index.ts
