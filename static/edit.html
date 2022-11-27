@@ -76,7 +76,8 @@
                     </div>
                     
                     <hr>
-                    <input type="submit" value="Odeslat obrázky">
+                    <div id="media-confirm" style="display: none;">Odesláno!</div>
+                    <input id="media-submit" type="submit" value="Odeslat obrázky">
                 </form>
             </div>
         </div>
@@ -100,6 +101,7 @@
                 return false;
             }
             function sendImages(form) {
+                document.getElementById("media-submit").disabled = true;
                 let result = [];
                 for (let i = 0; i < form.elements["media-image"].length; i++){
                     if (form.getElementsByClassName("media-image-display")[i].src === window.location.href) {
@@ -116,6 +118,12 @@
                     headers: {
                         'Content-Type': "application/json"
                     }
+                }).then(() => {
+                    document.getElementById("media-confirm").style = "";
+                    setTimeout(() => {
+                        document.getElementById("media-confirm").style = "display: none;"
+                        document.getElementById("media-submit").disabled = false;
+                    }, 3000);
                 })
                 return false;
             }
