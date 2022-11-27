@@ -1,7 +1,6 @@
-import {Router} from 'https://deno.land/x/oak@v10.4.0/mod.ts';
-import { v4 } from 'https://deno.land/std@0.129.0/uuid/mod.ts';
-import { assert } from 'https://deno.land/std@0.129.0/testing/asserts.ts';
-import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
+import {Router} from "../deps.ts";
+import { assert } from '../deps.ts';
+import {config} from "../deps.ts";
 
 import {GetLunchData, UpdateLunchData} from '../handlers/lunch.ts';
 import {GetWeatherData, UpdateWeatherData} from '../handlers/weather.ts';
@@ -99,7 +98,7 @@ apiRouter
     })
 
 function handleWs(sock: WebSocket) {
-    const socketId = v4.generate();
+    const socketId = crypto.randomUUID();
 
     sock.onopen = () => {
         sockets.set(socketId, sock);

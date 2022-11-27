@@ -1,7 +1,6 @@
-import { Application, ListenOptions, ListenOptionsTls } from 'https://deno.land/x/oak@v10.4.0/mod.ts';
+import { Application, ListenOptions, ListenOptionsTls } from './deps.ts';
 import { Pool } from 'https://deno.land/x/postgres@v0.15.0/mod.ts';
-import { assert } from 'https://deno.land/std@0.129.0/testing/asserts.ts';
-import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
+import { assert } from './deps.ts';
 import apiRouter from './routers/api.ts';
 
 const app = new Application();

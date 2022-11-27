@@ -1,4 +1,3 @@
-import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
 import {CallOnSetTime} from '../libs/time_call.ts';
 
 const apiKey = Deno.env.get("OPENWEATHERMAP_APIKEY");
