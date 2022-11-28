@@ -23,7 +23,7 @@ export async function GetWeatherData() {
 }
 
 function GetData(): Promise<Weather> {
-    return fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=46.602&lon=17.239&units=metric&exclude=minutely,alerts&appid=${apiKey}`)
+    return fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=49.602&lon=17.239&units=metric&exclude=minutely,alerts&appid=${apiKey}`)
         .then(res => res.json())
         .then(data => {
             const result: Weather = {
