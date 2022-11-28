@@ -1,6 +1,4 @@
-import { Application, ListenOptions, ListenOptionsTls } from './deps.ts';
-import { Pool } from 'https://deno.land/x/postgres@v0.15.0/mod.ts';
-import { assert } from './deps.ts';
+import { Application, ListenOptions, ListenOptionsTls, Pool, assert } from './deps.ts';
 import apiRouter from './routers/api.ts';
 
 const app = new Application();
@@ -9,7 +7,7 @@ const port: number = parseInt(Deno.env.get("PORT") || "80");
 export const controller = new AbortController();
 const signal = controller.signal;
 
-export const pool = new Pool(Deno.env.get("DATABASE_URL"), 2, true);
+export const pool = new Pool(Deno.env.get("DATABASE_URL"), 1, true);
 
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
