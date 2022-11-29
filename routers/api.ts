@@ -101,6 +101,7 @@ function handleWs(sock: WebSocket) {
     const socketId = crypto.randomUUID();
 
     sock.onopen = () => {
+        console.log("New connection!");
         if (sockets.size == 0) {
             startPingLoop();
         }
