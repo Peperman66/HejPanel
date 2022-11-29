@@ -48,6 +48,18 @@ function GetData(): Promise<Weather> {
                 }
             }
             return result;
+        }).catch(error => {
+            console.error(error);
+            return {
+                CurrentTemperature: 4,
+                CurrentTemperatureIcon: "04n",
+                MinTemperature: 0,
+                MaxTemperature: 5,
+                NextTemperatureTime1: 46800,
+                NextTemperatureTime2: 54000,
+                NextTemperatureIcon1: "04n",
+                NextTemperatureIcon2: "04n"
+            }
         })
 }
 
