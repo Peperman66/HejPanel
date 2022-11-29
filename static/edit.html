@@ -201,6 +201,8 @@
                     for (let i = mediaData.length; i < baseDiv.children.length - 1; i++) {
                         removeImageEntry(baseDiv.children[i]);
                     }
+                } else if (data.type === "ping") {
+                    websocket.send(JSON.stringify({type: "pong"}));
                 }
             });
         </script>

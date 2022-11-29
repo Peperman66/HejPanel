@@ -360,6 +360,8 @@
                         }
                     } else if (data.type === "reload") {
                         window.location.reload();
+                    } else if (data.type === "ping") {
+                        websocket.send(JSON.stringify({type: "pong"}));
                     }
                 });
                 websocket.addEventListener('close', event => {

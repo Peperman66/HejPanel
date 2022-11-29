@@ -101,6 +101,9 @@ function handleWs(sock: WebSocket) {
     const socketId = crypto.randomUUID();
 
     sock.onopen = () => {
+        if (sockets.size == 0) {
+            startPingLoop();
+        }
         sockets.set(socketId, sock);
         sendLunchData(sock);
         sendWeatherData(sock);
@@ -112,7 +115,12 @@ function handleWs(sock: WebSocket) {
         console.log(e.data);
     }
 
-    sock.onclose = () => sockets.delete(socketId);
+    sock.onclose = () => {
+        sockets.delete(socketId);
+        if (sockets.size == 0) {
+            stopPingLoop();
+        }
+    }
 }
 
 async function sendLunchData(sock: WebSocket) {
@@ -147,6 +155,22 @@ function sendReload(sock: WebSocket) {
     sock.send(JSON.stringify({
         type: "reload"
     }));
+}
+
+let connection;
+
+function startPingLoop() {
+    connection = setInterval(doPing, 30000);
+}
+
+function doPing() {
+    sockets.forEach(sock => {
+        sock.send(JSON.stringify({type: "ping"}));
+    })
+}
+
+function stopPingLoop() {
+
 }
 
 function sendWeatherDataToAll() {
