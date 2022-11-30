@@ -18,8 +18,7 @@ const apiRouter = new Router();
 apiRouter
     .get('/api/ws', ctx => {
         const sock = ctx.upgrade();
-        console.log("Incomming websocket request! IP: " + ctx.request.ip);
-        handleWs(sock);
+        handleWs(sock, ctx.request.ip);
     })
     .post('/api/events', async (ctx) => {
         if (ctx.request.headers.get('Authorization')?.split(' ')[1] !== login) {
@@ -98,15 +97,15 @@ apiRouter
         }
     })
 
-function handleWs(sock: WebSocket) {
-    const socketId = crypto.randomUUID();
+function handleWs(sock: WebSocket, ip: string) {
+    const socketId = crypto.randomUUID() + "|" + ip;
 
     sock.onopen = () => {
         if (sockets.size == 0) {
             startPingLoop();
         }
         sockets.set(socketId, sock);
-        console.log("New connection! Connections: " + sockets.size);
+        console.log("New connection! SocketId: " + socketId + ", Connections: " + sockets.size);
         sendLunchData(sock);
         sendWeatherData(sock);
         sendEventData(sock);
@@ -114,12 +113,12 @@ function handleWs(sock: WebSocket) {
     }
 
     sock.onmessage = (e) => {
-        console.log(e.data);
+        console.log("Message from " + socketId + "\n" + e.data);
     }
 
     sock.onclose = () => {
         sockets.delete(socketId);
-        console.log("Connection closed! Connections: " + sockets.size);
+        console.log("Connection closed! SocketId: " + socketId + ", Connections: " + sockets.size);
         if (sockets.size == 0) {
             stopPingLoop();
         }
@@ -167,6 +166,7 @@ function startPingLoop() {
 }
 
 function doPing() {
+    console.log("Sending ping!");
     sockets.forEach(sock => {
         sock.send(JSON.stringify({type: "ping"}));
     })
