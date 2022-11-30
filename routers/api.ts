@@ -18,6 +18,7 @@ const apiRouter = new Router();
 apiRouter
     .get('/api/ws', ctx => {
         const sock = ctx.upgrade();
+        console.log("Incomming websocket request! IP: " + ctx.request.ip);
         handleWs(sock);
     })
     .post('/api/events', async (ctx) => {
@@ -118,7 +119,7 @@ function handleWs(sock: WebSocket) {
 
     sock.onclose = () => {
         sockets.delete(socketId);
-        ("Connection closed! Connections: " + sockets.size);
+        console.log("Connection closed! Connections: " + sockets.size);
         if (sockets.size == 0) {
             stopPingLoop();
         }
