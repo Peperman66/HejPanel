@@ -101,11 +101,11 @@ function handleWs(sock: WebSocket) {
     const socketId = crypto.randomUUID();
 
     sock.onopen = () => {
-        console.log("New connection!");
         if (sockets.size == 0) {
             startPingLoop();
         }
         sockets.set(socketId, sock);
+        console.log("New connection! Connections: " + sockets.size);
         sendLunchData(sock);
         sendWeatherData(sock);
         sendEventData(sock);
@@ -118,6 +118,7 @@ function handleWs(sock: WebSocket) {
 
     sock.onclose = () => {
         sockets.delete(socketId);
+        ("Connection closed! Connections: " + sockets.size);
         if (sockets.size == 0) {
             stopPingLoop();
         }
@@ -171,7 +172,7 @@ function doPing() {
 }
 
 function stopPingLoop() {
-
+    clearInterval(connection);
 }
 
 function sendWeatherDataToAll() {
