@@ -12,6 +12,33 @@ type WebSocketData = {
     didReceivePing: boolean
 };
 
+const broadcastChannel = new BroadcastChannel("refresh");
+
+type MessageRefreshType = "lunch" | "weather" | "events" | "images" | "reload"
+
+broadcastChannel.onmessage = (event: MessageEvent<MessageRefreshType>) => {
+    if (event.data == "weather") {
+        sockets.forEach(websocketData => 
+            sendWeatherData(websocketData.socket)
+        );
+    } else if (event.data == "lunch") {
+        sockets.forEach(websocketData => {
+            sendLunchData(websocketData.socket);
+        })
+    } else if (event.data == "events") {
+        sockets.forEach(websocketData => {
+            sendEventData(websocketData.socket);
+        })
+    } else if (event.data == "images") {
+        sockets.forEach(websocketData => {
+            sendMediaData(websocketData.socket);
+        })
+    } else if (event.data == "reload") {
+        sockets.forEach(websocketData => {
+            sendReload(websocketData.socket);
+        });
+    }
+}
 const sockets = new Map<string, WebSocketData>();
 
 let weatherConnection: number;
@@ -101,27 +128,19 @@ function sendReload(sock: WebSocket) {
 }
 
 export function sendReloadToAll() {
-    sockets.forEach(websocketData => {
-        sendReload(websocketData.socket);
-    });
+    broadcastChannel.postMessage("reload");
 }
 
 export function sendLunchDataToAll() {
-    sockets.forEach(websocketData => {
-        sendLunchData(websocketData.socket);
-    })
+    broadcastChannel.postMessage("lunch");
 }
 
 export function sendEventDataToAll() {
-    sockets.forEach(websocketData => {
-        sendEventData(websocketData.socket);
-    })
+    broadcastChannel.postMessage("events");
 }
 
 export function sendMediaDataToAll() {
-    sockets.forEach(websocketData => {
-        sendMediaData(websocketData.socket);
-    })
+    broadcastChannel.postMessage("images");
 }
 
 function createWeatherConnection() {
@@ -130,5 +149,5 @@ function createWeatherConnection() {
 }
 
 export function sendWeatherDataToAll() {
-    sockets.forEach(websocketData => sendWeatherData(websocketData.socket));
+    broadcastChannel.postMessage("weather");
 }
