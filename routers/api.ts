@@ -63,6 +63,7 @@ apiRouter
             ctx.response.status = 404;
         } else {
             ctx.response.headers.set('Content-Type', 'image/png');
+            ctx.response.headers.set('Cache-Control', `public, max-age=${60*60}`) //1 hour
             ctx.response.body = decode(imageData.data);
             ctx.response.status = 200;
         }
