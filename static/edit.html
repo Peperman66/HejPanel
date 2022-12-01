@@ -88,7 +88,7 @@
                     result.push({
                         name: form.elements["event-header"][i].value,
                         description: form.elements["event-content"][i].value,
-                        isimportant: form.elements["event-important"][i].checked
+                        isImportant: form.elements["event-important"][i].checked
                     });
                 }
                 fetch("/api/events", {
@@ -174,6 +174,7 @@
         <script>
             let eventForm = document.getElementById("event-form");
             let mediaForm = document.getElementById("media-form");
+            let currentUrl = `${location.protocol}://${location.hostname}`;
             let websocket = new WebSocket(`${location.protocol === "https:" ? "wss" : "ws"}://${location.hostname}/api/ws`);
             websocket.addEventListener('message', event => {
                 let data = JSON.parse(event.data);
@@ -182,7 +183,7 @@
                     for (let i = 0; i < eventData.length; i++){
                         eventForm.elements["event-header"][i].value = eventData[i].name;
                         eventForm.elements["event-content"][i].value = eventData[i].description;
-                        eventForm.elements["event-important"][i].checked = eventData[i].isimportant;
+                        eventForm.elements["event-important"][i].checked = eventData[i].isImportant;
                     }
                 } else if (data.type === "media") {
                     let mediaData = data.data;
@@ -191,7 +192,7 @@
                         if (baseDiv.children.length <= i + 1) {
                             addImageEntry();
                         }
-                        mediaForm.getElementsByClassName("media-image-display")[i].src = mediaData[i].image;
+                        mediaForm.getElementsByClassName("media-image-display")[i].src = `${currentUrl}/api/media/${mediaData[i].hash}`;
                         if (mediaData[i].duration != null) { 
                             let inputElement = mediaForm.elements["media-image-duration"][i] || mediaForm.elements["media-image-duration"];
                             inputElement.value = mediaData[i].duration;
