@@ -39,7 +39,7 @@ export type Image = {
  */
 export type ImageData = {
   hash: string
-  data: Buffer
+  data: string
 }
 
 
@@ -2865,12 +2865,12 @@ export namespace Prisma {
 
   export type ImageDataMinAggregateOutputType = {
     hash: string | null
-    data: Buffer | null
+    data: string | null
   }
 
   export type ImageDataMaxAggregateOutputType = {
     hash: string | null
-    data: Buffer | null
+    data: string | null
   }
 
   export type ImageDataCountAggregateOutputType = {
@@ -2976,7 +2976,7 @@ export namespace Prisma {
 
   export type ImageDataGroupByOutputType = {
     hash: string
-    data: Buffer
+    data: string
     _count: ImageDataCountAggregateOutputType | null
     _min: ImageDataMinAggregateOutputType | null
     _max: ImageDataMaxAggregateOutputType | null
@@ -3974,7 +3974,7 @@ export namespace Prisma {
     OR?: Enumerable<ImageDataWhereInput>
     NOT?: Enumerable<ImageDataWhereInput>
     hash?: StringFilter | string
-    data?: BytesFilter | Buffer
+    data?: StringFilter | string
     images?: ImageListRelationFilter
   }
 
@@ -4001,7 +4001,7 @@ export namespace Prisma {
     OR?: Enumerable<ImageDataScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ImageDataScalarWhereWithAggregatesInput>
     hash?: StringWithAggregatesFilter | string
-    data?: BytesWithAggregatesFilter | Buffer
+    data?: StringWithAggregatesFilter | string
   }
 
   export type EventCreateInput = {
@@ -4096,41 +4096,41 @@ export namespace Prisma {
 
   export type ImageDataCreateInput = {
     hash: string
-    data: Buffer
+    data: string
     images?: ImageCreateNestedManyWithoutDataInput
   }
 
   export type ImageDataUncheckedCreateInput = {
     hash: string
-    data: Buffer
+    data: string
     images?: ImageUncheckedCreateNestedManyWithoutDataInput
   }
 
   export type ImageDataUpdateInput = {
     hash?: StringFieldUpdateOperationsInput | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
+    data?: StringFieldUpdateOperationsInput | string
     images?: ImageUpdateManyWithoutDataNestedInput
   }
 
   export type ImageDataUncheckedUpdateInput = {
     hash?: StringFieldUpdateOperationsInput | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
+    data?: StringFieldUpdateOperationsInput | string
     images?: ImageUncheckedUpdateManyWithoutDataNestedInput
   }
 
   export type ImageDataCreateManyInput = {
     hash: string
-    data: Buffer
+    data: string
   }
 
   export type ImageDataUpdateManyMutationInput = {
     hash?: StringFieldUpdateOperationsInput | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
+    data?: StringFieldUpdateOperationsInput | string
   }
 
   export type ImageDataUncheckedUpdateManyInput = {
     hash?: StringFieldUpdateOperationsInput | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
+    data?: StringFieldUpdateOperationsInput | string
   }
 
   export type IntFilter = {
@@ -4268,13 +4268,6 @@ export namespace Prisma {
     duration?: SortOrder
   }
 
-  export type BytesFilter = {
-    equals?: Buffer
-    in?: Enumerable<Buffer>
-    notIn?: Enumerable<Buffer>
-    not?: NestedBytesFilter | Buffer
-  }
-
   export type ImageListRelationFilter = {
     every?: ImageWhereInput
     some?: ImageWhereInput
@@ -4298,16 +4291,6 @@ export namespace Prisma {
   export type ImageDataMinOrderByAggregateInput = {
     hash?: SortOrder
     data?: SortOrder
-  }
-
-  export type BytesWithAggregatesFilter = {
-    equals?: Buffer
-    in?: Enumerable<Buffer>
-    notIn?: Enumerable<Buffer>
-    not?: NestedBytesWithAggregatesFilter | Buffer
-    _count?: NestedIntFilter
-    _min?: NestedBytesFilter
-    _max?: NestedBytesFilter
   }
 
   export type IntFieldUpdateOperationsInput = {
@@ -4352,10 +4335,6 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ImageCreateOrConnectWithoutDataInput>
     createMany?: ImageCreateManyDataInputEnvelope
     connect?: Enumerable<ImageWhereUniqueInput>
-  }
-
-  export type BytesFieldUpdateOperationsInput = {
-    set?: Buffer
   }
 
   export type ImageUpdateManyWithoutDataNestedInput = {
@@ -4468,31 +4447,14 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
-  export type NestedBytesFilter = {
-    equals?: Buffer
-    in?: Enumerable<Buffer>
-    notIn?: Enumerable<Buffer>
-    not?: NestedBytesFilter | Buffer
-  }
-
-  export type NestedBytesWithAggregatesFilter = {
-    equals?: Buffer
-    in?: Enumerable<Buffer>
-    notIn?: Enumerable<Buffer>
-    not?: NestedBytesWithAggregatesFilter | Buffer
-    _count?: NestedIntFilter
-    _min?: NestedBytesFilter
-    _max?: NestedBytesFilter
-  }
-
   export type ImageDataCreateWithoutImagesInput = {
     hash: string
-    data: Buffer
+    data: string
   }
 
   export type ImageDataUncheckedCreateWithoutImagesInput = {
     hash: string
-    data: Buffer
+    data: string
   }
 
   export type ImageDataCreateOrConnectWithoutImagesInput = {
@@ -4507,12 +4469,12 @@ export namespace Prisma {
 
   export type ImageDataUpdateWithoutImagesInput = {
     hash?: StringFieldUpdateOperationsInput | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
+    data?: StringFieldUpdateOperationsInput | string
   }
 
   export type ImageDataUncheckedUpdateWithoutImagesInput = {
     hash?: StringFieldUpdateOperationsInput | string
-    data?: BytesFieldUpdateOperationsInput | Buffer
+    data?: StringFieldUpdateOperationsInput | string
   }
 
   export type ImageCreateWithoutDataInput = {

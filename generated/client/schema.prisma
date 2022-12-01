@@ -28,6 +28,6 @@ model Image {
 
 model ImageData {
   hash    String  @id
-  data    Bytes
+  data    String
   images  Image[]
 }
