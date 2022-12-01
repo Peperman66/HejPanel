@@ -89,9 +89,15 @@ export async function setMedia(media: MediaImage[]) {
         prisma.imageData.deleteMany({
             where: {}
         }),
+        prisma.imageData.createMany({
+            data: media.map((image) => {
+                return image.data;
+            }).filter(x => x !== undefined) as MediaData[],
+            skipDuplicates: true
+        }),
         prisma.image.createMany({
             data: media.map((image, index) => {
-                const _image = image as PrismaImage;
+                const _image = exclude(image, ['data']) as PrismaImage;
                 _image.id = index;
                 return _image;
             })
