@@ -14,15 +14,14 @@ export type Weather = {
 }
 let currentData: Weather;
 
-
 export async function GetWeatherData() {
     if (currentData === undefined) {
-        return await GetData();
+        return await FetchData();
     }
     return currentData;
 }
 
-function GetData(): Promise<Weather> {
+function FetchData(): Promise<Weather> {
     return fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=49.602&lon=17.239&units=metric&exclude=minutely,alerts&appid=${apiKey}`)
         .then(res => res.json())
         .then(data => {
@@ -67,8 +66,12 @@ function UpdateData() {
     UpdateWeatherData().then(() => CallOnSetTime(UpdateData, 49*60*1000 + 30*1000 /*29 minutes and 30 seconds*/));
 }
 
+export function GetData() {
+    return currentData;
+}
+
 export function UpdateWeatherData() {
-    return GetData().then(data => currentData = data);
+    return FetchData().then(data => currentData = data);
 }
 
 UpdateData();
