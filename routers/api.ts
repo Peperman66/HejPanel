@@ -1,18 +1,17 @@
 import {Router} from "../deps.ts";
 import { assert } from '../deps.ts';
-import {config} from "../deps.ts";
 
-import {GetLunchData, UpdateLunchData} from '../handlers/lunch.ts';
-import {GetWeatherData, UpdateWeatherData} from '../handlers/weather.ts';
-import {GetEventData, SaveEventData} from '../handlers/events.ts';
-import {GetMediaData, SaveMediaData} from '../handlers/media.ts';
+import {UpdateLunchData} from '../handlers/lunch.ts';
+import {UpdateWeatherData} from '../handlers/weather.ts';
+import {SaveEventData} from '../handlers/events.ts';
+import {SaveMediaData} from '../handlers/media.ts';
 
-import {CallOnSetTime} from '../libs/time_call.ts'
+import { handleWs, sendReloadToAll, sendLunchDataToAll, sendMediaDataToAll, sendEventDataToAll, sendWeatherDataToAll } from "../handlers/websockets.ts";
+
 import {controller} from '../index.ts';
 
 const login = Deno.env.get("LOGIN");
 assert(login != undefined);
-const sockets = new Map<string, WebSocket>();
 
 const apiRouter = new Router();
 apiRouter
@@ -29,7 +28,7 @@ apiRouter
                 .then(result => SaveEventData(result))
                 .then(() => {
                     ctx.response.status = 204;
-                    sockets.forEach(sock => sendEventData(sock));
+                    sendEventDataToAll();
                 })
                 .catch((err) => {
                     ctx.response.status = 500;
@@ -46,7 +45,7 @@ apiRouter
                 .then(result => SaveMediaData(result))
                 .then(() => {
                     ctx.response.status = 204;
-                    sockets.forEach(sock => sendMediaData(sock));
+                    sendMediaDataToAll();
                 })
                 .catch((err) => {
                     ctx.response.status = 500;
@@ -59,7 +58,7 @@ apiRouter
             ctx.response.status = 401;
             ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
         } else {
-            sockets.forEach(sock => sendReload(sock));
+            sendReloadToAll();
             ctx.response.status = 204;
         }
     })
@@ -70,7 +69,7 @@ apiRouter
         } else {
             UpdateLunchData()
             .then(() => {
-                sockets.forEach(sock => sendLunchData(sock));
+                sendLunchDataToAll();
             })
             ctx.response.status = 204;
         }
@@ -82,7 +81,7 @@ apiRouter
         } else {
             UpdateWeatherData()
             .then(() => {
-                sockets.forEach(sock => sendWeatherData(sock));
+                sendWeatherDataToAll();
             })
             ctx.response.status = 204;
         }
@@ -97,90 +96,6 @@ apiRouter
         }
     })
 
-function handleWs(sock: WebSocket, ip: string) {
-    const socketId = crypto.randomUUID() + "|" + ip;
 
-    sock.onopen = () => {
-        if (sockets.size == 0) {
-            startPingLoop();
-        }
-        sockets.set(socketId, sock);
-        console.log("New connection! SocketId: " + socketId + ", Connections: " + sockets.size);
-        sendLunchData(sock);
-        sendWeatherData(sock);
-        sendEventData(sock);
-        sendMediaData(sock);
-    }
-
-    sock.onmessage = (e) => {
-        console.log("Message from " + socketId + "\n" + e.data);
-    }
-
-    sock.onclose = () => {
-        sockets.delete(socketId);
-        console.log("Connection closed! SocketId: " + socketId + ", Connections: " + sockets.size);
-        if (sockets.size == 0) {
-            stopPingLoop();
-        }
-    }
-}
-
-async function sendLunchData(sock: WebSocket) {
-    sock.send(JSON.stringify({
-        type: 'lunch',
-        data: await GetLunchData()
-    }));
-}
-
-async function sendWeatherData(sock: WebSocket) {
-    sock.send(JSON.stringify({
-        type: 'weather',
-        data: await GetWeatherData()
-    }))
-}
-
-async function sendEventData(sock: WebSocket) {
-    sock.send(JSON.stringify({
-        type: 'events',
-        data: await GetEventData()
-    }))
-}
-
-async function sendMediaData(sock: WebSocket) {
-    sock.send(JSON.stringify({
-        type: 'media',
-        data: await GetMediaData()
-    }));
-}
-
-function sendReload(sock: WebSocket) {
-    sock.send(JSON.stringify({
-        type: "reload"
-    }));
-}
-
-let connection;
-
-function startPingLoop() {
-    connection = setInterval(doPing, 30000);
-}
-
-function doPing() {
-    console.log("Sending ping!");
-    sockets.forEach(sock => {
-        sock.send(JSON.stringify({type: "ping"}));
-    })
-}
-
-function stopPingLoop() {
-    clearInterval(connection);
-}
-
-function sendWeatherDataToAll() {
-    sockets.forEach(sock => sendWeatherData(sock));
-    CallOnSetTime(sendWeatherDataToAll, 30*60*1000) // 30 minutes
-}
-setInterval(() => {sockets.forEach(sock => sendLunchData(sock))},6*60*60*1000); //every 6 hours
-sendWeatherDataToAll();
 
 export default apiRouter;
