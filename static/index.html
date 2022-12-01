@@ -286,7 +286,6 @@
                 "LunchThree": "lunch-three"
             }
             let weatherImageBaseUrl = "https://openweathermap.org/img/wn/"
-            let currentUrl = `${location.protocol}://${location.hostname}`;
             let websocketUrl = `${location.protocol === "https:" ? "wss" : "ws"}://${location.hostname}/api/ws`;
             let mediaData = [];
             function getHoursAndMins(date) {
@@ -353,7 +352,7 @@
                         for (let i = 0; i < mediaData.length; i++) {
                             let img = document.createElement("img");
                             img.classList.add("media-image");
-                            img.src = `${currentUrl}/api/media/${mediaData[i].hash}`;
+                            img.src = `/api/media/${mediaData[i].hash}`;
                             mediaContainer.appendChild(img);
                         }
                         if (mediaContainer.children.length > 0) {

@@ -57,6 +57,7 @@ apiRouter
     })
     .get('/api/media/:imageHash', async ctx => {
         const imageHash = ctx.params.imageHash;
+        console.log(`Hash: ${imageHash}`)
         const imageData = await getMediaData(imageHash);
         if (imageData === null) {
             ctx.response.status = 404;
