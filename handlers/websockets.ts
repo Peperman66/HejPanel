@@ -17,6 +17,7 @@ const broadcastChannel = new BroadcastChannel("refresh");
 type MessageRefreshType = "lunch" | "weather" | "events" | "images" | "reload"
 
 broadcastChannel.onmessage = (event: MessageEvent<MessageRefreshType>) => {
+    console.log(`Message of type ${event.data} received!`);
     if (event.data == "weather") {
         sendWeatherDataToAll();
     } else if (event.data == "lunch") {
@@ -118,44 +119,52 @@ function sendReload(sock: WebSocket) {
 }
 
 export function broadcastReloadMessage() {
+    console.log("Sending reload message!")
     broadcastChannel.postMessage("reload");
     sendReloadToAll();
 }
 
 function sendReloadToAll() {
+    console.log("Reloading all pages!")
     sockets.forEach(websocketData => {
         sendReload(websocketData.socket);
     });
 }
 
 export function broadcastLunchDataMessage() {
+    console.log("Sending lunch message!");
     broadcastChannel.postMessage("lunch");
     sendLunchDataToAll();
 }
 
 function sendLunchDataToAll() {
+    console.log("Refreshing lunch data!");
     sockets.forEach(websocketData => {
         sendLunchData(websocketData.socket);
     })
 }
 
 export function broadcastEventDataMessage() {
+    console.log("Sending event message!");
     broadcastChannel.postMessage("events");
     sendEventDataToAll();
 }
 
 function sendEventDataToAll() {
+    console.log("Refreshing event data!");
     sockets.forEach(websocketData => {
         sendEventData(websocketData.socket);
     })
 }
 
 export function broadcastMediaDataMessage() {
+    console.log("Sending image message!");
     broadcastChannel.postMessage("images");
     sendMediaDataToAll();
 }
 
 function sendMediaDataToAll() {
+    console.log("Refreshing image data!");
     sockets.forEach(websocketData => {
         sendMediaData(websocketData.socket);
     })
@@ -167,11 +176,13 @@ function createWeatherConnection() {
 }
 
 export function broadcastWeatherDataMessage() {
+    console.log("Sending weather message!");
     broadcastChannel.postMessage("weather");
     sendWeatherDataToAll();
 }
 
 function sendWeatherDataToAll() {
+    console.log("Refreshing weather data!")
     sockets.forEach(websocketData => 
         sendWeatherData(websocketData.socket)
     );
