@@ -18,25 +18,15 @@ type MessageRefreshType = "lunch" | "weather" | "events" | "images" | "reload"
 
 broadcastChannel.onmessage = (event: MessageEvent<MessageRefreshType>) => {
     if (event.data == "weather") {
-        sockets.forEach(websocketData => 
-            sendWeatherData(websocketData.socket)
-        );
+        sendWeatherDataToAll();
     } else if (event.data == "lunch") {
-        sockets.forEach(websocketData => {
-            sendLunchData(websocketData.socket);
-        })
+        sendLunchDataToAll();
     } else if (event.data == "events") {
-        sockets.forEach(websocketData => {
-            sendEventData(websocketData.socket);
-        })
+        sendEventDataToAll();
     } else if (event.data == "images") {
-        sockets.forEach(websocketData => {
-            sendMediaData(websocketData.socket);
-        })
+        sendMediaDataToAll();
     } else if (event.data == "reload") {
-        sockets.forEach(websocketData => {
-            sendReload(websocketData.socket);
-        });
+        sendReloadToAll();
     }
 }
 const sockets = new Map<string, WebSocketData>();
@@ -59,7 +49,7 @@ export function handleWs(sock: WebSocket, ip: string) {
         websocketData.connections.push(setInterval(() => sendPing(websocketData), 30000));
 
         if (sockets.size == 1) {
-            lunchConnection = setInterval(sendLunchDataToAll, 6*60*60*1000);
+            lunchConnection = setInterval(broadcastLunchDataMessage, 6*60*60*1000);
             createWeatherConnection();
         }
 
@@ -127,27 +117,62 @@ function sendReload(sock: WebSocket) {
     }));
 }
 
-export function sendReloadToAll() {
+export function broadcastReloadMessage() {
     broadcastChannel.postMessage("reload");
+    sendReloadToAll();
 }
 
-export function sendLunchDataToAll() {
+function sendReloadToAll() {
+    sockets.forEach(websocketData => {
+        sendReload(websocketData.socket);
+    });
+}
+
+export function broadcastLunchDataMessage() {
     broadcastChannel.postMessage("lunch");
+    sendLunchDataToAll();
 }
 
-export function sendEventDataToAll() {
+function sendLunchDataToAll() {
+    sockets.forEach(websocketData => {
+        sendLunchData(websocketData.socket);
+    })
+}
+
+export function broadcastEventDataMessage() {
     broadcastChannel.postMessage("events");
+    sendEventDataToAll();
 }
 
-export function sendMediaDataToAll() {
+function sendEventDataToAll() {
+    sockets.forEach(websocketData => {
+        sendEventData(websocketData.socket);
+    })
+}
+
+export function broadcastMediaDataMessage() {
     broadcastChannel.postMessage("images");
+    sendMediaDataToAll();
+}
+
+function sendMediaDataToAll() {
+    sockets.forEach(websocketData => {
+        sendMediaData(websocketData.socket);
+    })
 }
 
 function createWeatherConnection() {
     weatherConnection = CallOnSetTime(createWeatherConnection, 30*60*1000); //30 minutes
+    broadcastWeatherDataMessage();
+}
+
+export function broadcastWeatherDataMessage() {
+    broadcastChannel.postMessage("weather");
     sendWeatherDataToAll();
 }
 
-export function sendWeatherDataToAll() {
-    broadcastChannel.postMessage("weather");
+function sendWeatherDataToAll() {
+    sockets.forEach(websocketData => 
+        sendWeatherData(websocketData.socket)
+    );
 }

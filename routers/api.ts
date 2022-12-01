@@ -7,7 +7,7 @@ import {UpdateWeatherData} from '../handlers/weather.ts';
 import {SaveEventData} from '../handlers/events.ts';
 import {SaveMediaData} from '../handlers/media.ts';
 
-import { handleWs, sendReloadToAll, sendLunchDataToAll, sendMediaDataToAll, sendEventDataToAll, sendWeatherDataToAll } from "../handlers/websockets.ts";
+import { handleWs, broadcastReloadMessage, broadcastLunchDataMessage, broadcastMediaDataMessage, broadcastEventDataMessage, broadcastWeatherDataMessage } from "../handlers/websockets.ts";
 import { getMediaData } from "../handlers/db.ts";
 
 import {controller} from '../index.ts';
@@ -30,7 +30,7 @@ apiRouter
                 .then(result => SaveEventData(result))
                 .then(() => {
                     ctx.response.status = 204;
-                    sendEventDataToAll();
+                    broadcastEventDataMessage();
                 })
                 .catch((err) => {
                     ctx.response.status = 500;
@@ -47,7 +47,7 @@ apiRouter
                 .then(result => SaveMediaData(result))
                 .then(() => {
                     ctx.response.status = 204;
-                    sendMediaDataToAll();
+                    broadcastMediaDataMessage();
                 })
                 .catch((err) => {
                     ctx.response.status = 500;
@@ -57,7 +57,6 @@ apiRouter
     })
     .get('/api/media/:imageHash', async ctx => {
         const imageHash = ctx.params.imageHash;
-        console.log(`Hash: ${imageHash}`)
         const imageData = await getMediaData(imageHash);
         if (imageData === null) {
             ctx.response.status = 404;
@@ -73,7 +72,7 @@ apiRouter
             ctx.response.status = 401;
             ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
         } else {
-            sendReloadToAll();
+            broadcastReloadMessage();
             ctx.response.status = 204;
         }
     })
@@ -84,7 +83,7 @@ apiRouter
         } else {
             UpdateLunchData()
             .then(() => {
-                sendLunchDataToAll();
+                broadcastLunchDataMessage();
             })
             ctx.response.status = 204;
         }
@@ -96,7 +95,7 @@ apiRouter
         } else {
             UpdateWeatherData()
             .then(() => {
-                sendWeatherDataToAll();
+                broadcastWeatherDataMessage();
             })
             ctx.response.status = 204;
         }

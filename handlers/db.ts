@@ -5,9 +5,6 @@ import {config} from '../deps.ts';
 
 await config({export: true})
 
-console.log(Deno.env.get("DATABASE_PROXY_URL"))
-console.log(Deno.env)
-
 const prisma = new PrismaClient({
     datasources: {
         db: {
