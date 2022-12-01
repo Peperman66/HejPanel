@@ -1,13 +1,13 @@
-import { Application, ListenOptions, ListenOptionsTls, Pool, assert } from './deps.ts';
+import { Application, ListenOptions, ListenOptionsTls, assert, config} from './deps.ts';
 import apiRouter from './routers/api.ts';
+
+await config({export: true});
 
 const app = new Application();
 const port: number = parseInt(Deno.env.get("PORT") || "80");
 
 export const controller = new AbortController();
 const signal = controller.signal;
-
-export const pool = new Pool(Deno.env.get("DATABASE_URL"), 1, true);
 
 app.use(apiRouter.routes());
 app.use(apiRouter.allowedMethods());
@@ -63,5 +63,4 @@ if (Deno.env.get("TLS_CERTFILELOCATION") !== undefined) {
 }
 
 await app.listen(settings);
-await pool.end();
 Deno.exit();

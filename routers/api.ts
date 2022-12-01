@@ -7,6 +7,7 @@ import {SaveEventData} from '../handlers/events.ts';
 import {SaveMediaData} from '../handlers/media.ts';
 
 import { handleWs, sendReloadToAll, sendLunchDataToAll, sendMediaDataToAll, sendEventDataToAll, sendWeatherDataToAll } from "../handlers/websockets.ts";
+import { getMediaData } from "../handlers/db.ts";
 
 import {controller} from '../index.ts';
 
@@ -51,6 +52,17 @@ apiRouter
                     ctx.response.status = 500;
                     console.log(err);
                 });
+        }
+    })
+    .get('/api/media/:imageHash', async ctx => {
+        const imageHash = ctx.params.imageHash;
+        const imageData = await getMediaData(imageHash);
+        if (imageData === null) {
+            ctx.response.status = 404;
+        } else {
+            ctx.response.headers.set('Content-Type', 'image/png');
+            ctx.response.body = imageData.data;
+            ctx.response.status = 200;
         }
     })
     .post('/api/reload', ctx => {

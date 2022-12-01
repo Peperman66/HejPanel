@@ -1,32 +1,10 @@
-import { pool } from '../index.ts';
+import type { MediaImage } from "../types/mediaData.ts";
+import { setMedia, getMediaImages } from "./db.ts";
 
-type Image = {
-    image: string,
-    duration: number;
-}
-export type Images = Array<Image>;
-
-export async function SaveMediaData(data: Images): Promise<void> {
-    const client = await pool.connect();
-    const transaction = client.createTransaction("save_media", {isolation_level: "serializable"});
-    await transaction.begin();
-    transaction.queryArray('TRUNCATE TABLE media;');
-
-    for (let i = 0; i < data.length; i++) {
-        const imageData = data[i].image;
-        const imageDuration = data[i].duration;
-        transaction.queryArray(`INSERT INTO media (Id, Image, Duration) VALUES (${i}, '${imageData}', ${imageDuration});`);
-    }
-    await transaction.commit();
-    client.release();
+export function SaveMediaData(data: MediaImage[]): Promise<void> {
+    return setMedia(data);
 }
 
-export async function GetMediaData(): Promise<Images> {
-    const client = await pool.connect();
-    const transaction = client.createTransaction("read_media", { read_only: true });
-    await transaction.begin();
-    const data = await transaction.queryObject<Image>('SELECT Image, Duration FROM media ORDER BY ID;');
-    await transaction.commit();
-    client.release();
-    return data.rows;
+export function GetMediaData(): Promise<Omit<MediaImage, "data">[]> {
+    return getMediaImages(false);
 }
