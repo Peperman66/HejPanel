@@ -163,7 +163,7 @@ function sendMediaDataToAll() {
 
 function createWeatherConnection() {
     weatherConnection = CallOnSetTime(createWeatherConnection, 30*60*1000); //30 minutes
-    broadcastWeatherDataMessage();
+    sendWeatherDataToAll();
 }
 
 export function broadcastWeatherDataMessage() {
