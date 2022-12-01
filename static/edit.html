@@ -109,7 +109,7 @@
                     }
                     result.push({
                         image: getBase64FromImage(form.getElementsByClassName("media-image-display")[i]),
-                        duration: form.elements["media-image-duration"][i].value
+                        duration: parseInt(form.elements["media-image-duration"][i].value)
                     });
                 }
                 fetch("/api/media", {

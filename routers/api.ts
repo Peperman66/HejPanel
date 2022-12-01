@@ -1,5 +1,6 @@
 import {Router} from "../deps.ts";
 import { assert } from '../deps.ts';
+import {decode} from '../deps.ts';
 
 import {UpdateLunchData} from '../handlers/lunch.ts';
 import {UpdateWeatherData} from '../handlers/weather.ts';
@@ -61,7 +62,7 @@ apiRouter
             ctx.response.status = 404;
         } else {
             ctx.response.headers.set('Content-Type', 'image/png');
-            ctx.response.body = imageData.data;
+            ctx.response.body = decode(imageData.data);
             ctx.response.status = 200;
         }
     })

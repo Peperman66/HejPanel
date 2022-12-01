@@ -8,5 +8,10 @@ export type MediaImage = {
 
 export type MediaData = {
     hash: string,
-    data: Buffer
+    data: string
+}
+
+export type MediaRequest = {
+    image: string,
+    duration: number
 }
