@@ -16,8 +16,6 @@ const prisma = new PrismaClient({
 type PrismaEvent = Event & {id: number};
 type PrismaImage = MediaImage & {id: number};
 
-let disconnectTimeout: number;
-
 function exclude<T, Key extends keyof T>(base: T, keys: Key[]): Omit<T, Key> {
     for (const key of keys) {
         delete base[key];
@@ -26,8 +24,6 @@ function exclude<T, Key extends keyof T>(base: T, keys: Key[]): Omit<T, Key> {
 }
 
 export async function setEvents(events: Event[]) {
-    clearTimeout(disconnectTimeout);
-    setTimeout(disconnect, 60*1000);
     const eventsWithId: PrismaEvent[] = events.map((event, index) => {
         const _event = event as PrismaEvent;
         _event.id = index;
@@ -42,8 +38,6 @@ export async function setEvents(events: Event[]) {
 }
 
 export async function getEvents(): Promise<Event[]> {
-    clearTimeout(disconnectTimeout);
-    setTimeout(disconnect, 60*1000);
     const prismaEvents = await prisma.event.findMany({
         where: {},
         orderBy: {
@@ -56,8 +50,6 @@ export async function getEvents(): Promise<Event[]> {
 }
 
 export async function getMediaData(hash: string): Promise<MediaData | null> {
-    clearTimeout(disconnectTimeout);
-    setTimeout(disconnect, 60*1000);
     const image = await prisma.imageData.findFirst({
         where: {
             hash: hash
@@ -71,8 +63,6 @@ export async function getMediaData(hash: string): Promise<MediaData | null> {
 }
 
 export async function getMediaImages(includeData: boolean): Promise<MediaImage[]> {
-    clearTimeout(disconnectTimeout);
-    setTimeout(disconnect, 60*1000);
     const images = await prisma.image.findMany({
         where: {},
         include: {
@@ -89,8 +79,6 @@ export async function getMediaImages(includeData: boolean): Promise<MediaImage[]
 }
 
 export async function setMedia(media: MediaImage[]) {
-    clearTimeout(disconnectTimeout);
-    setTimeout(disconnect, 60*1000);
     await prisma.$transaction([
         prisma.image.deleteMany({
             where: {}
@@ -112,8 +100,4 @@ export async function setMedia(media: MediaImage[]) {
             })
         })
     ]);
-}
-
-export async function disconnect() {
-    await prisma.$disconnect()
 }
