@@ -1,4 +1,4 @@
-import {Buffer} from '../deps.ts';
+import {Buffer} from '../deps.ts'
 
 export type MediaImage = {
     hash: string,
@@ -8,7 +8,7 @@ export type MediaImage = {
 
 export type MediaData = {
     hash: string,
-    data: string
+    data: Buffer
 }
 
 export type MediaRequest = {

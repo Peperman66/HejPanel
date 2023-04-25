@@ -89,8 +89,7 @@ export async function setMedia(media: MediaImage[]) {
         prisma.imageData.createMany({
             data: media.map((image) => {
                 return image.data;
-            }).filter(x => x !== undefined) as MediaData[],
-            skipDuplicates: true
+            }).filter(x => x !== undefined) as MediaData[]
         }),
         prisma.image.createMany({
             data: media.map((image, index) => {
@@ -101,3 +100,5 @@ export async function setMedia(media: MediaImage[]) {
         })
     ]);
 }
+
+

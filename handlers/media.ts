@@ -2,6 +2,7 @@ import type { MediaData, MediaImage, MediaRequest } from "../types/mediaData.ts"
 import { setMedia, getMediaImages } from "./db.ts";
 
 import {decode} from '../deps.ts';
+import {Buffer} from '../deps.ts'
 
 export async function SaveMediaData(data: MediaRequest[]): Promise<void> {
 
@@ -18,7 +19,7 @@ export async function SaveMediaData(data: MediaRequest[]): Promise<void> {
             hash: hashHex,
             data: {
                 hash: hashHex,
-                data: base64string
+                data: new Buffer(rawData)
             }
         }
         mediaData.push(currentMediaData);
