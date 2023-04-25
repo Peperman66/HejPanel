@@ -64,7 +64,7 @@ apiRouter
         } else {
             ctx.response.headers.set('Content-Type', 'image/png');
             ctx.response.headers.set('Cache-Control', `public, max-age=${60*60}`) //1 hour
-            ctx.response.body = imageData.data.bytes;
+            ctx.response.body = imageData.data.buffer;
             ctx.response.status = 200;
         }
     })

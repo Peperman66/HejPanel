@@ -19,7 +19,7 @@ export async function SaveMediaData(data: MediaRequest[]): Promise<void> {
             hash: hashHex,
             data: {
                 hash: hashHex,
-                data: new Buffer(rawData)
+                data: Buffer.from(rawData)
             }
         }
         mediaData.push(currentMediaData);
