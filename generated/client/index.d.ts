@@ -39,7 +39,7 @@ export type Image = {
  */
 export type ImageData = {
   hash: string
-  data: string
+  data: Buffer
 }
 
 
@@ -98,52 +98,6 @@ export class PrismaClient<
   $use(cb: Prisma.Middleware): void
 
 /**
-   * Executes a prepared raw query and returns the number of affected rows.
-   * @example
-   * ```
-   * const result = await prisma.$executeRaw`UPDATE User SET cool = ${true} WHERE email = ${'user@email.com'};`
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $executeRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<number>;
-
-  /**
-   * Executes a raw query and returns the number of affected rows.
-   * Susceptible to SQL injections, see documentation.
-   * @example
-   * ```
-   * const result = await prisma.$executeRawUnsafe('UPDATE User SET cool = $1 WHERE email = $2 ;', true, 'user@email.com')
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $executeRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<number>;
-
-  /**
-   * Performs a prepared raw query and returns the `SELECT` data.
-   * @example
-   * ```
-   * const result = await prisma.$queryRaw`SELECT * FROM User WHERE id = ${1} OR email = ${'user@email.com'};`
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $queryRaw<T = unknown>(query: TemplateStringsArray | Prisma.Sql, ...values: any[]): PrismaPromise<T>;
-
-  /**
-   * Performs a raw query and returns the `SELECT` data.
-   * Susceptible to SQL injections, see documentation.
-   * @example
-   * ```
-   * const result = await prisma.$queryRawUnsafe('SELECT * FROM User WHERE id = $1 OR email = $2;', 1, 'user@email.com')
-   * ```
-   * 
-   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
-   */
-  $queryRawUnsafe<T = unknown>(query: string, ...values: any[]): PrismaPromise<T>;
-
-  /**
    * Allows the running of a sequence of read/write operations that are guaranteed to either succeed or fail as a whole.
    * @example
    * ```
@@ -156,9 +110,24 @@ export class PrismaClient<
    * 
    * Read more in our [docs](https://www.prisma.io/docs/concepts/components/prisma-client/transactions).
    */
-  $transaction<P extends PrismaPromise<any>[]>(arg: [...P], options?: { isolationLevel?: Prisma.TransactionIsolationLevel }): Promise<UnwrapTuple<P>>;
+  $transaction<P extends PrismaPromise<any>[]>(arg: [...P]): Promise<UnwrapTuple<P>>;
 
-  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number, isolationLevel?: Prisma.TransactionIsolationLevel}): Promise<R>;
+  $transaction<R>(fn: (prisma: Prisma.TransactionClient) => Promise<R>, options?: {maxWait?: number, timeout?: number}): Promise<R>;
+
+  /**
+   * Executes a raw MongoDB command and returns the result of it.
+   * @example
+   * ```
+   * const user = await prisma.$runCommandRaw({
+   *   aggregate: 'User',
+   *   pipeline: [{ $match: { name: 'Bob' } }, { $project: { email: true, _id: false } }],
+   *   explain: false,
+   * })
+   * ```
+   * 
+   * Read more in our [docs](https://www.prisma.io/docs/reference/tools-and-interfaces/prisma-client/raw-database-access).
+   */
+  $runCommandRaw(command: Prisma.InputJsonObject): PrismaPromise<Prisma.JsonObject>;
 
       /**
    * `prisma.event`: Exposes CRUD operations for the **Event** model.
@@ -1320,6 +1289,33 @@ export namespace Prisma {
     ): Prisma__EventClient<EventGetPayload<T>>
 
     /**
+     * Find zero or more Events that matches the filter.
+     * @param {EventFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const event = await prisma.event.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: EventFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Event.
+     * @param {EventAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const event = await prisma.event.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: EventAggregateRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
      * Count the number of Events.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -1730,7 +1726,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<EventCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -1826,6 +1821,40 @@ export namespace Prisma {
      * 
     **/
     where?: EventWhereInput
+  }
+
+
+  /**
+   * Event findRaw
+   */
+  export type EventFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Event aggregateRaw
+   */
+  export type EventAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
   }
 
 
@@ -2279,6 +2308,33 @@ export namespace Prisma {
     ): Prisma__ImageClient<ImageGetPayload<T>>
 
     /**
+     * Find zero or more Images that matches the filter.
+     * @param {ImageFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const image = await prisma.image.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: ImageFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a Image.
+     * @param {ImageAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const image = await prisma.image.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: ImageAggregateRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
      * Count the number of Images.
      * Note, that providing `undefined` is treated as the value not being there.
      * Read more here: https://pris.ly/d/null-undefined
@@ -2720,7 +2776,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<ImageCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -2835,6 +2890,40 @@ export namespace Prisma {
 
 
   /**
+   * Image findRaw
+   */
+  export type ImageFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * Image aggregateRaw
+   */
+  export type ImageAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
    * Image without action
    */
   export type ImageArgs = {
@@ -2865,12 +2954,12 @@ export namespace Prisma {
 
   export type ImageDataMinAggregateOutputType = {
     hash: string | null
-    data: string | null
+    data: Buffer | null
   }
 
   export type ImageDataMaxAggregateOutputType = {
     hash: string | null
-    data: string | null
+    data: Buffer | null
   }
 
   export type ImageDataCountAggregateOutputType = {
@@ -2976,7 +3065,7 @@ export namespace Prisma {
 
   export type ImageDataGroupByOutputType = {
     hash: string
-    data: string
+    data: Buffer
     _count: ImageDataCountAggregateOutputType | null
     _min: ImageDataMinAggregateOutputType | null
     _max: ImageDataMaxAggregateOutputType | null
@@ -3245,6 +3334,33 @@ export namespace Prisma {
     upsert<T extends ImageDataUpsertArgs>(
       args: SelectSubset<T, ImageDataUpsertArgs>
     ): Prisma__ImageDataClient<ImageDataGetPayload<T>>
+
+    /**
+     * Find zero or more ImageData that matches the filter.
+     * @param {ImageDataFindRawArgs} args - Select which filters you would like to apply.
+     * @example
+     * const imageData = await prisma.imageData.findRaw({
+     *   filter: { age: { $gt: 25 } } 
+     * })
+    **/
+    findRaw(
+      args?: ImageDataFindRawArgs
+    ): PrismaPromise<JsonObject>
+
+    /**
+     * Perform aggregation operations on a ImageData.
+     * @param {ImageDataAggregateRawArgs} args - Select which aggregations you would like to apply.
+     * @example
+     * const imageData = await prisma.imageData.aggregateRaw({
+     *   pipeline: [
+     *     { $match: { status: "registered" } },
+     *     { $group: { _id: "$country", total: { $sum: 1 } } }
+     *   ]
+     * })
+    **/
+    aggregateRaw(
+      args?: ImageDataAggregateRawArgs
+    ): PrismaPromise<JsonObject>
 
     /**
      * Count the number of ImageData.
@@ -3688,7 +3804,6 @@ export namespace Prisma {
      * 
     **/
     data: Enumerable<ImageDataCreateManyInput>
-    skipDuplicates?: boolean
   }
 
 
@@ -3803,6 +3918,40 @@ export namespace Prisma {
 
 
   /**
+   * ImageData findRaw
+   */
+  export type ImageDataFindRawArgs = {
+    /**
+     * The query predicate filter. If unspecified, then all documents in the collection will match the predicate. ${@link https://docs.mongodb.com/manual/reference/operator/query MongoDB Docs}.
+     * 
+    **/
+    filter?: InputJsonValue
+    /**
+     * Additional options to pass to the `find` command ${@link https://docs.mongodb.com/manual/reference/command/find/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
+   * ImageData aggregateRaw
+   */
+  export type ImageDataAggregateRawArgs = {
+    /**
+     * An array of aggregation stages to process and transform the document stream via the aggregation pipeline. ${@link https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline MongoDB Docs}.
+     * 
+    **/
+    pipeline?: Array<InputJsonValue>
+    /**
+     * Additional options to pass to the `aggregate` command ${@link https://docs.mongodb.com/manual/reference/command/aggregate/#command-fields MongoDB Docs}.
+     * 
+    **/
+    options?: InputJsonValue
+  }
+
+
+  /**
    * ImageData without action
    */
   export type ImageDataArgs = {
@@ -3868,16 +4017,6 @@ export namespace Prisma {
   };
 
   export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
-
-
-  export const TransactionIsolationLevel: {
-    ReadUncommitted: 'ReadUncommitted',
-    ReadCommitted: 'ReadCommitted',
-    RepeatableRead: 'RepeatableRead',
-    Serializable: 'Serializable'
-  };
-
-  export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
   /**
@@ -3974,7 +4113,7 @@ export namespace Prisma {
     OR?: Enumerable<ImageDataWhereInput>
     NOT?: Enumerable<ImageDataWhereInput>
     hash?: StringFilter | string
-    data?: StringFilter | string
+    data?: BytesFilter | Buffer
     images?: ImageListRelationFilter
   }
 
@@ -4001,7 +4140,7 @@ export namespace Prisma {
     OR?: Enumerable<ImageDataScalarWhereWithAggregatesInput>
     NOT?: Enumerable<ImageDataScalarWhereWithAggregatesInput>
     hash?: StringWithAggregatesFilter | string
-    data?: StringWithAggregatesFilter | string
+    data?: BytesWithAggregatesFilter | Buffer
   }
 
   export type EventCreateInput = {
@@ -4019,14 +4158,12 @@ export namespace Prisma {
   }
 
   export type EventUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     isImportant?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type EventUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     isImportant?: BoolFieldUpdateOperationsInput | boolean
@@ -4040,14 +4177,12 @@ export namespace Prisma {
   }
 
   export type EventUpdateManyMutationInput = {
-    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     isImportant?: BoolFieldUpdateOperationsInput | boolean
   }
 
   export type EventUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
     name?: StringFieldUpdateOperationsInput | string
     description?: StringFieldUpdateOperationsInput | string
     isImportant?: BoolFieldUpdateOperationsInput | boolean
@@ -4066,13 +4201,11 @@ export namespace Prisma {
   }
 
   export type ImageUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
     data?: ImageDataUpdateOneRequiredWithoutImagesNestedInput
     duration?: IntFieldUpdateOperationsInput | number
   }
 
   export type ImageUncheckedUpdateInput = {
-    id?: IntFieldUpdateOperationsInput | number
     hash?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
   }
@@ -4084,53 +4217,47 @@ export namespace Prisma {
   }
 
   export type ImageUpdateManyMutationInput = {
-    id?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
   }
 
   export type ImageUncheckedUpdateManyInput = {
-    id?: IntFieldUpdateOperationsInput | number
     hash?: StringFieldUpdateOperationsInput | string
     duration?: IntFieldUpdateOperationsInput | number
   }
 
   export type ImageDataCreateInput = {
     hash: string
-    data: string
+    data: Buffer
     images?: ImageCreateNestedManyWithoutDataInput
   }
 
   export type ImageDataUncheckedCreateInput = {
     hash: string
-    data: string
+    data: Buffer
     images?: ImageUncheckedCreateNestedManyWithoutDataInput
   }
 
   export type ImageDataUpdateInput = {
-    hash?: StringFieldUpdateOperationsInput | string
-    data?: StringFieldUpdateOperationsInput | string
+    data?: BytesFieldUpdateOperationsInput | Buffer
     images?: ImageUpdateManyWithoutDataNestedInput
   }
 
   export type ImageDataUncheckedUpdateInput = {
-    hash?: StringFieldUpdateOperationsInput | string
-    data?: StringFieldUpdateOperationsInput | string
+    data?: BytesFieldUpdateOperationsInput | Buffer
     images?: ImageUncheckedUpdateManyWithoutDataNestedInput
   }
 
   export type ImageDataCreateManyInput = {
     hash: string
-    data: string
+    data: Buffer
   }
 
   export type ImageDataUpdateManyMutationInput = {
-    hash?: StringFieldUpdateOperationsInput | string
-    data?: StringFieldUpdateOperationsInput | string
+    data?: BytesFieldUpdateOperationsInput | Buffer
   }
 
   export type ImageDataUncheckedUpdateManyInput = {
-    hash?: StringFieldUpdateOperationsInput | string
-    data?: StringFieldUpdateOperationsInput | string
+    data?: BytesFieldUpdateOperationsInput | Buffer
   }
 
   export type IntFilter = {
@@ -4268,6 +4395,13 @@ export namespace Prisma {
     duration?: SortOrder
   }
 
+  export type BytesFilter = {
+    equals?: Buffer
+    in?: Enumerable<Buffer>
+    notIn?: Enumerable<Buffer>
+    not?: NestedBytesFilter | Buffer
+  }
+
   export type ImageListRelationFilter = {
     every?: ImageWhereInput
     some?: ImageWhereInput
@@ -4293,12 +4427,14 @@ export namespace Prisma {
     data?: SortOrder
   }
 
-  export type IntFieldUpdateOperationsInput = {
-    set?: number
-    increment?: number
-    decrement?: number
-    multiply?: number
-    divide?: number
+  export type BytesWithAggregatesFilter = {
+    equals?: Buffer
+    in?: Enumerable<Buffer>
+    notIn?: Enumerable<Buffer>
+    not?: NestedBytesWithAggregatesFilter | Buffer
+    _count?: NestedIntFilter
+    _min?: NestedBytesFilter
+    _max?: NestedBytesFilter
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -4323,6 +4459,14 @@ export namespace Prisma {
     update?: XOR<ImageDataUpdateWithoutImagesInput, ImageDataUncheckedUpdateWithoutImagesInput>
   }
 
+  export type IntFieldUpdateOperationsInput = {
+    set?: number
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
+  }
+
   export type ImageCreateNestedManyWithoutDataInput = {
     create?: XOR<Enumerable<ImageCreateWithoutDataInput>, Enumerable<ImageUncheckedCreateWithoutDataInput>>
     connectOrCreate?: Enumerable<ImageCreateOrConnectWithoutDataInput>
@@ -4335,6 +4479,10 @@ export namespace Prisma {
     connectOrCreate?: Enumerable<ImageCreateOrConnectWithoutDataInput>
     createMany?: ImageCreateManyDataInputEnvelope
     connect?: Enumerable<ImageWhereUniqueInput>
+  }
+
+  export type BytesFieldUpdateOperationsInput = {
+    set?: Buffer
   }
 
   export type ImageUpdateManyWithoutDataNestedInput = {
@@ -4447,14 +4595,31 @@ export namespace Prisma {
     _max?: NestedBoolFilter
   }
 
+  export type NestedBytesFilter = {
+    equals?: Buffer
+    in?: Enumerable<Buffer>
+    notIn?: Enumerable<Buffer>
+    not?: NestedBytesFilter | Buffer
+  }
+
+  export type NestedBytesWithAggregatesFilter = {
+    equals?: Buffer
+    in?: Enumerable<Buffer>
+    notIn?: Enumerable<Buffer>
+    not?: NestedBytesWithAggregatesFilter | Buffer
+    _count?: NestedIntFilter
+    _min?: NestedBytesFilter
+    _max?: NestedBytesFilter
+  }
+
   export type ImageDataCreateWithoutImagesInput = {
     hash: string
-    data: string
+    data: Buffer
   }
 
   export type ImageDataUncheckedCreateWithoutImagesInput = {
     hash: string
-    data: string
+    data: Buffer
   }
 
   export type ImageDataCreateOrConnectWithoutImagesInput = {
@@ -4468,13 +4633,11 @@ export namespace Prisma {
   }
 
   export type ImageDataUpdateWithoutImagesInput = {
-    hash?: StringFieldUpdateOperationsInput | string
-    data?: StringFieldUpdateOperationsInput | string
+    data?: BytesFieldUpdateOperationsInput | Buffer
   }
 
   export type ImageDataUncheckedUpdateWithoutImagesInput = {
-    hash?: StringFieldUpdateOperationsInput | string
-    data?: StringFieldUpdateOperationsInput | string
+    data?: BytesFieldUpdateOperationsInput | Buffer
   }
 
   export type ImageCreateWithoutDataInput = {
@@ -4494,7 +4657,6 @@ export namespace Prisma {
 
   export type ImageCreateManyDataInputEnvelope = {
     data: Enumerable<ImageCreateManyDataInput>
-    skipDuplicates?: boolean
   }
 
   export type ImageUpsertWithWhereUniqueWithoutDataInput = {
@@ -4528,17 +4690,14 @@ export namespace Prisma {
   }
 
   export type ImageUpdateWithoutDataInput = {
-    id?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
   }
 
   export type ImageUncheckedUpdateWithoutDataInput = {
-    id?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
   }
 
   export type ImageUncheckedUpdateManyWithoutImagesInput = {
-    id?: IntFieldUpdateOperationsInput | number
     duration?: IntFieldUpdateOperationsInput | number
   }
 
