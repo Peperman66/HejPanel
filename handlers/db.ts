@@ -79,26 +79,32 @@ export async function getMediaImages(includeData: boolean): Promise<MediaImage[]
 }
 
 export async function setMedia(media: MediaImage[]) {
-    await prisma.$transaction([
+    const actions = [
         prisma.image.deleteMany({
             where: {}
         }),
         prisma.imageData.deleteMany({
             where: {}
-        }),
-        prisma.imageData.createMany({
-            data: media.map((image) => {
-                return image.data;
-            }).filter(x => x !== undefined) as MediaData[]
-        }),
-        prisma.image.createMany({
-            data: media.map((image, index) => {
-                const _image = exclude(image, ['data']) as PrismaImage;
-                _image.id = index;
-                return _image;
-            })
         })
-    ]);
+    ]
+    if (media.length > 0) {
+        actions.push(
+            prisma.imageData.createMany({
+                data: media.map((image) => {
+                    return image.data;
+                }).filter(x => x !== undefined) as MediaData[]
+            }),
+            prisma.image.createMany({
+                data: media.map((image, index) => {
+                    const _image = exclude(image, ['data']) as PrismaImage;
+                    _image.id = index;
+                    return _image;
+                })
+            })
+        )
+    }
+
+    await prisma.$transaction(actions);
 }
 
 
