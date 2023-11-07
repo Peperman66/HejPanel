@@ -43,7 +43,7 @@ apiRouter
             ctx.response.status = 401;
             ctx.response.headers.set('WWW-Authenticate', 'Basic realm="HejPanel Login"');
         } else {
-            await ctx.request.body({type: "json"}).value
+            await ctx.request.body({type: "json", limit: 104652900}).value
                 .then(result => SaveMediaData(result))
                 .then(() => {
                     ctx.response.status = 204;
