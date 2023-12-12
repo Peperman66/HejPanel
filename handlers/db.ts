@@ -1,14 +1,14 @@
 import {PrismaClient} from '../generated/client/deno/edge.ts';
 import type { Event } from '../types/event.ts';
 import type { MediaData, MediaImage } from '../types/mediaData.ts';
-import {config} from '../deps.ts';
+import {load} from '../deps.ts';
 
-await config({export: true})
+await load({export: true})
 
 const prisma = new PrismaClient({
     datasources: {
         db: {
-            url: Deno.env.get("DATABASE_PROXY_URL")
+            url: Deno.env.get("DATABASE_URL")
         }
     }
 });
