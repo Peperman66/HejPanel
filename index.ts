@@ -1,7 +1,7 @@
-import { Application, ListenOptions, ListenOptionsTls, assert, config} from './deps.ts';
+import { Application, ListenOptions, ListenOptionsTls, assert, load} from './deps.ts';
 import apiRouter from './routers/api.ts';
 
-await config({export: true});
+await load({export: true});
 
 const app = new Application();
 const port: number = parseInt(Deno.env.get("PORT") || "80");
